@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <string.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <ArduinoWebsockets.h>
@@ -13,6 +14,7 @@
 #include <lvgl.h>
 #include <TFT_eSPI.h>
 #include <SPI.h>
+#include <Preferences.h>
 #include "loading_icon.c"
 // #include "wifi_icon.c"
 #include "font_Hmos_sans_sc.h"
@@ -32,8 +34,6 @@ void my_print(lv_log_level_t level, const char * file, uint32_t line, const char
 
 TFT_eSPI tft = TFT_eSPI(); /* TFT instance */
 MQ135 mq135_sensor = MQ135(PIN_MQ135);
-const char* SSID = "$_2.4G";
-const char* PASSWORD = "WR-';223sgjm4sd445n/....?=_-096.~6---";
 String path = "/pico";
 const uint16_t websockets_server_port = 8091;
 const char* websockets_server_host = "192.168.1.101"; 
@@ -46,7 +46,7 @@ DHT_Unified dht(DHTPIN, DHTTYPE);  //DHT11传感器初始化
 uint32_t delayMS;
 long previousTime=0;
 long wifiLoadTime=0;
-float temperature = 21.0; // assume current temperature. Recommended to measure with DHT22
+float temperature = 21.0; 
 float humidity = 25.0; 
 static lv_disp_buf_t disp_buf;
 static lv_color_t buf[LV_HOR_RES_MAX * 45];
@@ -61,18 +61,81 @@ lv_obj_t * tempDisplay; //温度控件
 lv_obj_t * humDisplay; //湿度控件
 bool GUIInit = false;
 bool initStatus = false;
+Preferences prefs; //NVS操作对象
 
+/**
+ * @brief 
+ * 获取NVS数据
+ */
+bool NVSGet(char *names[], int arr_len, void (*Callback)(String)){
+  Serial.println("开始访问NVS...");
+  prefs.begin("userData");
+  Serial.print("NVS剩余空间为:");
+  Serial.println(prefs.freeEntries());//查询剩余空间
 
+  StaticJsonDocument<200> doc;
+  String result;
 
-//初始化wifi
-void WiFi_connect(){
-    Serial.println("connecting...");
-    WiFi.begin(SSID, PASSWORD); 
-    while(WiFi.status() != WL_CONNECTED){
-      delay(300);
-      Serial.print(".");
-    }
-   Serial.print("wifi ok");
+  if(!prefs.isKey(names[0])){
+    Serial.printf("无存储信息信息!\n");
+    // undo();
+    return false;
+  }
+  for(int i=0; i<arr_len;i++){
+    Serial.println(names[i]);//查询剩余空间
+    Serial.println(prefs.getString(names[i]).c_str());
+    doc[names[i]] = prefs.getString(names[i]);
+  }
+  serializeJson(doc, result);
+  Serial.println(result);
+  
+  Callback(result);
+  //结束NVS访问
+  prefs.end();
+} 
+
+/**
+ * @brief 
+ * NVS存储数据
+ */
+void NVSSet(){
+  Serial.println("开始存储数据");
+  prefs.begin("userData");
+  prefs.putString("wifi_ssid", "$_2.4G");
+  prefs.putString("wifi_password", "WR-';223sgjm4sd445n/....?=_-096.~6---");
+  Serial.println("存储完成");
+  prefs.end();
+}
+
+//连接wifi
+void WiFi_connect(String data){
+  DynamicJsonDocument doc(1024);
+  deserializeJson(doc, data);
+  String ssid = doc["wifi_ssid"]; 
+  String password =doc["wifi_password"] ;
+  WiFi.begin(ssid.c_str(), password.c_str()); 
+  while(WiFi.status() != WL_CONNECTED){
+    delay(300);
+    Serial.print(".");
+  }
+  Serial.print("wifi ok");
+}
+
+/**
+ * @brief 
+ * 初始化wifi
+ * @param name 
+ * @param password 
+ */
+void wifi_init(){
+  Serial.println("connecting...");
+  char *key[] = {"wifi_ssid", "wifi_password"};
+  //获取存储的wifi数据
+  NVSGet(key, 2, WiFi_connect);
+}
+
+void WIFI_set(void){
+
 }
 
 //初始化LED
@@ -657,9 +720,10 @@ void update_time(void){
 
 
 void taskOne(void *parameter)
-{
-  WiFi_connect();
+{ 
+  wifi_init();
   IPAddress ip = WiFi.localIP();
+  Serial.println(ip);
   lv_label_set_text_fmt(initText, "ip:%d.%d.%d.%d", ip[0],ip[1],ip[2],ip[3]);
   initStatus = true;
   Serial.println("Ending task 1");
@@ -726,9 +790,10 @@ void removeLoading(void){
 //开始程序入口
 void setup() {
   //初始化串口
-  serial_init();    
+  serial_init(); 
   //初始化GUI配置
   gui_config_init();
+  // NVSSet();
   xTaskCreate(
   taskOne,   /* Task function. */
   "TaskOne", /* String with name of task. */
@@ -738,7 +803,6 @@ void setup() {
   NULL); 
   //初始化loading
   main_page();
-  //初始化WiFi
    
   // //初始化socket
   // socketClientInit();

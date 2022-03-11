@@ -45,6 +45,7 @@
         "typeinfo": "cpp",
         "string_view": "cpp",
         "tft_espi_esp32.c": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "string": "cpp"
     }
 }
