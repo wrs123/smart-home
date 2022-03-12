@@ -15,7 +15,7 @@ void gui_config_init(void);
 void init_page(void);
 void removeLoading(void);
 void show_QR_code(void);
-
+void del_loadingContainer(void);
 
 
 #endif

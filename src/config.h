@@ -23,34 +23,40 @@
 
 #ifndef AP_PASSWORD
     #define AP_PASSWORD ""
-#endif 
+#endif //AP_PASSWORD
 
 
 #ifndef SCREEN_WIDTH
     #define SCREEN_WIDTH TFT_WIDTH
-#endif
+#endif //SCREEN_WIDTH
 
 #ifndef SCREEN_HEIGHT
     #define SCREEN_HEIGHT TFT_HEIGHT
-#endif
-
-#ifndef DHTPIN
-    #define DHTPIN 13
-#endif
-
+#endif //SCREEN_HEIGHT
 
 #ifndef DHTTYPE
     #define DHTTYPE DHT11
-#endif
+#endif //DHTTYPE
 
+#ifndef DHT11_PIN
+    #define DHT11_PIN 33 //DHT-11数据引脚
+#endif //DHT_PIN
 
-#ifndef PIN_MQ135
-    #define PIN_MQ135 A0
-#endif
+#ifndef MQ2_PIN
+    #define MQ2_PIN 36 //烟雾传感器引脚
+#endif //MQ2_PIN
 
+#ifndef MQ4_PIN
+    #define MQ4_PIN 39 //天然气传感器引脚
+#endif //MQ4_PIN
 
+#ifndef BUZZER_PIN
+    #define BUZZER_PIN 39 //蜂鸣器引脚
+#endif //BUZZER_PIN
 
-
+#ifndef HC_SR505_PIN
+    #define HC_SR505_PIN 2 //人体传感器引脚
+#endif //HC_SR505_PIN
 
 
 

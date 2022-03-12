@@ -173,6 +173,10 @@ void removeLoading(void){
   lv_anim_start(&remove_anim); 
 }
 
+void del_loadingContainer(void){
+  lv_obj_del(loadingContainer);
+}
+
 /**
  * @brief 显示ap二维码
  * 
@@ -180,8 +184,8 @@ void removeLoading(void){
 void show_QR_code(void){
   delay(600);
   Serial.println("显示二维码");
+  del_loadingContainer();
   
-  lv_obj_del(loadingContainer);
 
   QRCodeContainer = lv_obj_create(screen, NULL);
   static lv_style_t containerStyle;

@@ -54,11 +54,16 @@ bool NVSGet(char *names[], int arr_len, bool (*Callback)(String, bool)){
  * @brief 
  * NVS存储数据
  */
-void NVSSet(){
-  Serial.println("开始存储数据");
+void NVSSet(String data){
+  Serial.println("开始存储数据...");
+  Serial.println(data);
+  StaticJsonDocument<200> doc; 
+  deserializeJson(doc, data);
+  Serial.println((const char*)doc["wifi_ssid"]);
+  Serial.println((const char*)doc["wifi_password"]);
   prefs.begin("userData");
-  prefs.putString("wifi_ssid", "$_2.4G");
-  prefs.putString("wifi_password", "WR-';223sgjm4sd445n/....?=_-096.~6---");
+  prefs.putString("wifi_ssid", (const char*)doc["wifi_ssid"]);
+  prefs.putString("wifi_password", (const char*)doc["wifi_password"]);
   Serial.println("存储完成");
   prefs.end();
 }

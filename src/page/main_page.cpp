@@ -10,6 +10,7 @@
  */
 #include "main_page.h"
 #include "../config.h"
+#include "init_page.h"
 #include <Arduino.h>
 #include <SPI.h>
 #include <TFT_eSPI.h>
@@ -31,6 +32,7 @@ long update_time_dealy=0;
  */
 void main_page(void){
   delay(600);
+  del_loadingContainer();
   //初始化屏幕
   lv_obj_t * screen = lv_obj_create(lv_scr_act(), NULL); //创建屏幕
   static lv_style_t screenStyle;
@@ -197,8 +199,8 @@ void main_page(void){
   lv_anim_init(&a);
   lv_anim_set_exec_cb(&a, (lv_anim_exec_xcb_t) lv_obj_set_y);
   lv_anim_set_var(&a, status_bar);
-  lv_anim_set_time(&a, 250);
-  lv_anim_set_delay(&a, 350);
+  lv_anim_set_time(&a, 300);
+  // lv_anim_set_delay(&a, 600);
   lv_anim_path_t path;
   lv_anim_path_init(&path);
   lv_anim_path_set_cb(&path, lv_anim_path_ease_out);

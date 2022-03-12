@@ -30,12 +30,12 @@
 #include "utils/custom_print.h"
 #include "utils/custom_wifi.h"
 #include "utils/data_ctr.h"
-
+/* page include */
 #include "page/init_page.h"
 #include "page/main_page.h"
 
 
-MQ135 mq135_sensor = MQ135(PIN_MQ135);
+// MQ135 mq135_sensor = MQ135(MQ135_PIN);
 String path = "/pico";
 const uint16_t websockets_server_port = 8091;
 const char* websockets_server_host = "192.168.1.101"; 
@@ -44,7 +44,7 @@ using namespace websockets;
 WebsocketsClient client;//Enter server adress
 bool connected = false;
 bool ledStatus = false;
-DHT_Unified dht(DHTPIN, DHTTYPE);  //DHT11传感器初始化
+DHT_Unified dht(DHT11_PIN, DHTTYPE);  //DHT11传感器初始化
 uint32_t delayMS;
 long previousTime=0;
 long wifiLoadTime=0;
@@ -243,26 +243,26 @@ void sendTHData(void){
       // Serial.print(event.relative_humidity);
       // Serial.println(F("%"));
     }
-    serializeJson(dataDoc, ouput_param);
+    serializeJson(dataDoc, ouput_param); 
 
-    client.send(ouput_param);
-    float rzero = mq135_sensor.getRZero();
-    float correctedRZero = mq135_sensor.getCorrectedRZero(temperature, humidity);
-    float resistance = mq135_sensor.getResistance();
-    float ppm = mq135_sensor.getPPM();
-    float correctedPPM = mq135_sensor.getCorrectedPPM(temperature, humidity);
+    // client.send(ouput_param);
+    // float rzero = mq135_sensor.getRZero();
+    // float correctedRZero = mq135_sensor.getCorrectedRZero(temperature, humidity);
+    // float resistance = mq135_sensor.getResistance();
+    // float ppm = mq135_sensor.getPPM();
+    // float correctedPPM = mq135_sensor.getCorrectedPPM(temperature, humidity);
 
-    Serial.print("MQ135 RZero: ");
-    Serial.println(rzero);
-    Serial.print("\t Corrected RZero: ");
-    Serial.println(correctedRZero);
-    Serial.print("\t Resistance: ");
-    Serial.println(resistance);
-    Serial.print("\t PPM: ");
-    Serial.println(ppm);
-    Serial.print("\t Corrected PPM: ");
-    Serial.print(correctedPPM);
-    Serial.println("ppm");
+    // Serial.print("MQ135 RZero: ");
+    // Serial.println(rzero);
+    // Serial.print("\t Corrected RZero: ");
+    // Serial.println(correctedRZero);
+    // Serial.print("\t Resistance: ");
+    // Serial.println(resistance);
+    // Serial.print("\t PPM: ");
+    // Serial.println(ppm);
+    // Serial.print("\t Corrected PPM: ");
+    // Serial.print(correctedPPM);
+    // Serial.println("ppm");
     }
 }
 
@@ -270,10 +270,26 @@ void sendTHData(void){
 void taskOne(void *parameter)
 { 
   wifi_init();
+  while(!get_wifi_connect_status()){
+    
+    delay(50);
+    
+  }
   // IPAddress ip = WiFi.localIP();
   // Serial.println(ip);
   // lv_label_set_text_fmt(initText, "ip:%d.%d.%d.%d", ip[0],ip[1],ip[2],ip[3]);
   // initStatus = true;
+  
+  // while(true){
+  //   if(WiFi.status() == WL_CONNECTED && !GUIInit && initStatus){
+  //     Serial.println("Ending task 1");
+  //     vTaskDelete(NULL);
+  //   }
+  // }
+  // delay(10000);
+  IPAddress ip = WiFi.localIP();
+  Serial.println(ip);
+  initStatus = true;
   Serial.println("Ending task 1");
   vTaskDelete(NULL);
 }
@@ -338,7 +354,6 @@ void loop() {
     //   delay(1500);
     // }
     if(WiFi.status() == WL_CONNECTED && !GUIInit && initStatus){
-      delay(300);
       removeLoading();
       main_page();
        Serial.println("IP address:");
