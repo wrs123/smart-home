@@ -10,7 +10,7 @@
  */
 #include <Arduino.h>
 #include <string.h>
-#include <WiFi.h>
+
 #include <HTTPClient.h>
 #include <ArduinoWebsockets.h>
 #include <stdlib.h>
@@ -21,26 +21,18 @@
 #include "DHT.h"
 #include <DHT_U.h>
 #include "MQ135.h"
-#include "page/init_page.h"
-#include "page/main_page.h"
-#include <Preferences.h>
+
+/*==========custom include============= */
 #include "config.h"
 #include "assets/imgs/loading_icon.c"
 #include "assets/imgs/ap_QR_code.c"
 #include "assets/fonts/font_Hmos_sans_sc.h"
-#define DHTPIN 13
-#define DHTTYPE DHT11
-#define PIN_MQ135 A0
+#include "utils/custom_print.h"
+#include "utils/custom_wifi.h"
+#include "utils/data_ctr.h"
 
-#if USE_LV_LOG != 0
-/* Serial debugging */
-void my_print(lv_log_level_t level, const char * file, uint32_t line, const char * dsc)
-{
-
-  Serial.printf("%s@%d->%s\r\n", file, line, dsc);
-  delay(100);
-}
-#endif
+#include "page/init_page.h"
+#include "page/main_page.h"
 
 
 MQ135 mq135_sensor = MQ135(PIN_MQ135);
@@ -64,113 +56,13 @@ lv_obj_t * tempDisplay; //温度控件
 lv_obj_t * humDisplay; //湿度控件
 bool GUIInit = false;
 bool initStatus = false;
-Preferences prefs; //NVS操作对象
 
 
-/**
- * @brief 
- * 获取NVS数据
- */
-bool NVSGet(char *names[], int arr_len, bool (*Callback)(String, bool)){
-  Serial.println("开始访问NVS...");
-  prefs.begin("userData");
-  Serial.print("NVS剩余空间为:");
-  Serial.println(prefs.freeEntries());//查询剩余空间
-
-  StaticJsonDocument<200> doc;
-  String result = "";
-
-  if(!prefs.isKey(names[0])){
-    Serial.printf("无存储信息信息!\n");
-    Callback(result, false);
-    return false;
-  }
-  for(int i=0; i<arr_len;i++){
-    Serial.println(names[i]);//查询剩余空间
-    Serial.println(prefs.getString(names[i]).c_str());
-    doc[names[i]] = prefs.getString(names[i]);
-  }
-  serializeJson(doc, result);
-  Serial.println(result);
-  
-  Callback(result, true);
-  //结束NVS访问
-  prefs.end();
-} 
-
-/**
- * @brief 
- * NVS存储数据
- */
-void NVSSet(){
-  Serial.println("开始存储数据");
-  prefs.begin("userData");
-  prefs.putString("wifi_ssid", "$_2.4G");
-  prefs.putString("wifi_password", "WR-';223sgjm4sd445n/....?=_-096.~6---");
-  Serial.println("存储完成");
-  prefs.end();
-}
-
-/**
- * @brief 
- * 删除NVS
- */
-void NVSRemove(){
-  Serial.println("开始删除数据");
-  prefs.begin("userData");
-  prefs.remove("wifi_ssid");
-  prefs.remove("wifi_password");
-  Serial.println("删除完成");
-  prefs.end();
-}
 
 void dosth(void){
   Serial.println("动画完成");
 }
 
-//连接wifi
-bool WiFi_connect(String data, bool status){
-  if(status){
-    DynamicJsonDocument doc(1024);
-    deserializeJson(doc, data);
-    String ssid = doc["wifi_ssid"]; 
-    String password =doc["wifi_password"] ;
-    WiFi.begin(ssid.c_str(), password.c_str()); 
-    while(WiFi.status() != WL_CONNECTED){
-      delay(300);
-      Serial.print(".");
-    }
-    Serial.print("wifi ok");
-    return true;
-  }
-  Serial.println("开始启动配网");
-  WiFi.softAP(AP_SSID, AP_PASSWORD, 1, 1);
-  Serial.println("ap启动完成");
-  Serial.print("ap_ip:");
-  Serial.println(WiFi.softAPIP());
-  removeLoading();
-  show_QR_code();
-  // delay(300);
-}
-
-
-
-/**
- * @brief 
- * 初始化wifi
- * @param name 
- * @param password 
- */
-void wifi_init(){
-  Serial.println("connecting...");
-  char *key[] = {"wifi_ssid", "wifi_password"};
-  //获取存储的wifi数据
-  NVSGet(key, 2, WiFi_connect);
-}
-
-void WIFI_set(void){
-
-}
 
 //初始化LED
 void initLED(void){
@@ -276,11 +168,6 @@ int radomTemp(void){
     return a;
 }
 
-//初始化串口
-void serial_init(){
-  Serial.begin(115200); 
-  delay(100);
-}
 
 
 /**
@@ -392,15 +279,14 @@ void taskOne(void *parameter)
 }
 
 
-
-
 //开始程序入口
 void setup() {
-  //初始化串口
-  serial_init(); 
+  //初始化控制台输出
+  print_init(); 
   //初始化GUI配置
   gui_config_init();
 
+  //线程一
   xTaskCreate(
   taskOne,   /* Task function. */
   "TaskOne", /* String with name of task. */

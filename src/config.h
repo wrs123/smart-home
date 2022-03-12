@@ -34,6 +34,21 @@
     #define SCREEN_HEIGHT TFT_HEIGHT
 #endif
 
+#ifndef DHTPIN
+    #define DHTPIN 13
+#endif
+
+
+#ifndef DHTTYPE
+    #define DHTTYPE DHT11
+#endif
+
+
+#ifndef PIN_MQ135
+    #define PIN_MQ135 A0
+#endif
+
+
 
 
 

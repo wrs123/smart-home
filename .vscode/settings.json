@@ -50,6 +50,11 @@
         "loading_icon.c": "cpp",
         "ap_qr_code.c": "cpp",
         "tft_espi.h": "c",
-        "spi.h": "c"
+        "spi.h": "c",
+        "custom_print.h": "c",
+        "data_ctr.h": "c",
+        "arduino.h": "c",
+        "stdbool.h": "c",
+        "preferences.h": "c"
     }
 }
