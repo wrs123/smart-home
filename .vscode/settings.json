@@ -46,6 +46,10 @@
         "string_view": "cpp",
         "tft_espi_esp32.c": "cpp",
         "random": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "loading_icon.c": "cpp",
+        "ap_qr_code.c": "cpp",
+        "tft_espi.h": "c",
+        "spi.h": "c"
     }
 }
