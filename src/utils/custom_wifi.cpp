@@ -22,6 +22,7 @@
 #include "data_ctr.h"
 #include "config.h"
 #include "../page/init_page.h"
+#include "../page/main_page.h"
 
 AsyncWebServer server(8091);  
 bool wifi_connect_status = false;
@@ -63,6 +64,11 @@ void notFound(AsyncWebServerRequest *request) {
     request->send(404, "text/plain", "Not found");
 }
 
+void main_callback(){
+  removeLoading();
+  main_page();
+}
+
 /**
  * @brief 
  * 开启http服务，配网
@@ -78,7 +84,9 @@ void Http_server(void){
         wifi_password = request->getParam("wifi_password", true)->value();
         Serial.println(wifi_ssid);
         Serial.println(wifi_password);
-        NVSSet("{\"wifi_ssid\":\""+wifi_ssid+"\",\"wifi_password\":\""+wifi_password+"\"}");
+        NVSSet("{\"wifi_ssid\":\""+wifi_ssid+"\",\"wifi_password\":\""+wifi_password+"\"}", main_callback);
+        server.end(); //结束服务
+        WiFi.disconnect(); //关闭ap热点
     } else {
         wifi_ssid = "No message sent";
     }

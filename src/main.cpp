@@ -302,6 +302,7 @@ void setup() {
   //初始化GUI配置
   gui_config_init();
 
+  // pinMode(T0, INPUT_PULLUP);
   //线程一
   xTaskCreate(
   taskOne,   /* Task function. */
@@ -312,7 +313,7 @@ void setup() {
   NULL); 
   //初始化页面
   init_page();
-   
+  //  NVSRemove();
   // //初始化socket
   // socketClientInit();
   //初始化led
@@ -334,8 +335,9 @@ void loop() {
   //当前连接状态判断 
   // socket_status_check();
   // if(WiFi.status() == WL_CONNECTED && GUIInit && initStatus){
+    // tftEndWrite();
   lv_task_handler(); /* let the GUI do its work */
-
+  
   //   // lv_label_set_text_fmt(tempDisplay, "%s°C", temp);
   // }
      
@@ -360,6 +362,11 @@ void loop() {
         Serial.print(WiFi.localIP());
         GUIInit = true;
     }
+    // delay(100);
+    // Serial.printf("touch:%d\r\n", touchRead(T0));
+    //  if(touchRead(T0) < 40){
+    //   NVSRemove();
+    //  }
 }
 
 // #include "Freenove_WS2812_Lib_for_ESP32.h"

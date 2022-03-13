@@ -33,6 +33,7 @@ bool NVSGet(char *names[], int arr_len, bool (*Callback)(String, bool)){
   if(!prefs.isKey(names[0])){
     Serial.printf("无存储信息信息!\n");
     Callback(result, false);
+    prefs.end();
     return false;
   }
   for(int i=0; i<arr_len;i++){
@@ -54,7 +55,7 @@ bool NVSGet(char *names[], int arr_len, bool (*Callback)(String, bool)){
  * @brief 
  * NVS存储数据
  */
-void NVSSet(String data){
+void NVSSet(String data, void (*Callback)(void)){
   Serial.println("开始存储数据...");
   Serial.println(data);
   StaticJsonDocument<200> doc; 
@@ -66,6 +67,7 @@ void NVSSet(String data){
   prefs.putString("wifi_password", (const char*)doc["wifi_password"]);
   Serial.println("存储完成");
   prefs.end();
+  Callback();
 }
 
 

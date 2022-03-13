@@ -31,17 +31,8 @@ long update_time_dealy=0;
  * 初始化gui
  */
 void main_page(void){
-  delay(600);
-  del_loadingContainer();
-  //初始化屏幕
-  lv_obj_t * screen = lv_obj_create(lv_scr_act(), NULL); //创建屏幕
-  static lv_style_t screenStyle;
-  lv_style_init(&screenStyle);
-  lv_obj_set_width(screen, SCREEN_WIDTH);
-  lv_obj_set_height(screen, SCREEN_HEIGHT);
-  lv_style_set_border_width(&screenStyle, LV_STATE_DEFAULT, 0);
-  lv_style_set_bg_color(&screenStyle, LV_STATE_DEFAULT, lv_color_hex(0x808695));
-  lv_obj_add_style(screen, LV_LABEL_PART_MAIN, &screenStyle);
+  lv_obj_t * screen = getScreen(); //获取屏幕对象
+ 
 
   //初始化顶部容器
   lv_obj_t * topContainer = lv_obj_create(screen, NULL);
@@ -200,7 +191,7 @@ void main_page(void){
   lv_anim_set_exec_cb(&a, (lv_anim_exec_xcb_t) lv_obj_set_y);
   lv_anim_set_var(&a, status_bar);
   lv_anim_set_time(&a, 300);
-  // lv_anim_set_delay(&a, 600);
+  lv_anim_set_delay(&a, 1000);
   lv_anim_path_t path;
   lv_anim_path_init(&path);
   lv_anim_path_set_cb(&path, lv_anim_path_ease_out);
@@ -213,7 +204,7 @@ void main_page(void){
   lv_anim_set_exec_cb(&b, (lv_anim_exec_xcb_t) lv_obj_set_y);
   lv_anim_set_var(&b, topContainer);
   lv_anim_set_time(&b, 300);
-  lv_anim_set_delay(&a, 50);
+  lv_anim_set_delay(&b, 650);
   lv_anim_path_t path2;
   lv_anim_path_init(&path2);
   lv_anim_path_set_cb(&path2, lv_anim_path_ease_out);
@@ -227,7 +218,7 @@ void main_page(void){
   lv_anim_set_exec_cb(&b1anim, (lv_anim_exec_xcb_t) lv_obj_set_y);
   lv_anim_set_var(&b1anim, button1);
   lv_anim_set_time(&b1anim, 350);
-  lv_anim_set_delay(&b1anim, 650);
+  lv_anim_set_delay(&b1anim, 1300);
   lv_anim_path_t b1path;
   lv_anim_path_init(&b1path);
   lv_anim_path_set_cb(&b1path, lv_anim_path_ease_out);
@@ -240,7 +231,7 @@ void main_page(void){
   lv_anim_set_exec_cb(&b2anim, (lv_anim_exec_xcb_t) lv_obj_set_y);
   lv_anim_set_var(&b2anim, button2);
   lv_anim_set_time(&b2anim, 350);
-  lv_anim_set_delay(&b2anim, 900);
+  lv_anim_set_delay(&b2anim, 1600);
   lv_anim_path_t b2path;
   lv_anim_path_init(&b2path);
   lv_anim_path_set_cb(&b2path, lv_anim_path_ease_out);
@@ -254,7 +245,7 @@ void main_page(void){
   lv_anim_set_exec_cb(&b3anim, (lv_anim_exec_xcb_t) lv_obj_set_y);
   lv_anim_set_var(&b3anim, button3);
   lv_anim_set_time(&b3anim, 350);
-  lv_anim_set_delay(&b3anim, 1150);
+  lv_anim_set_delay(&b3anim, 1900);
   lv_anim_path_t b3path;
   lv_anim_path_init(&b3path);
   lv_anim_path_set_cb(&b3path, lv_anim_path_ease_out);

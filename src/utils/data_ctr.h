@@ -14,7 +14,7 @@
 #include <Arduino.h>
 
 //设置NVS存储数据
-void NVSSet(String data);
+void NVSSet(String data, void (*Callback)(void));
 //删除NVS数据
 void NVSRemove(void);
 //获取NVS存储数据

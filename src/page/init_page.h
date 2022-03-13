@@ -10,12 +10,15 @@
  */
 #ifndef INIT_PAGE_H
 #define INIT_PAGE_H
+#include <lvgl.h>
+
 
 void gui_config_init(void);
 void init_page(void);
 void removeLoading(void);
 void show_QR_code(void);
 void del_loadingContainer(void);
-
+void tftEndWrite();
+lv_obj_t * getScreen(void);
 
 #endif

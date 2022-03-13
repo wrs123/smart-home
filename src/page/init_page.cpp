@@ -18,15 +18,23 @@
 
 
 TFT_eSPI tft = TFT_eSPI(); //初始化tft对象
+lv_obj_t * screen;
 static lv_disp_buf_t disp_buf; //初始化屏幕数据缓存
 static lv_color_t buf[LV_HOR_RES_MAX * 45];
-lv_obj_t * screen;
 lv_obj_t * loadingContainer;
 lv_obj_t * initText;
 lv_anim_t loading_anim; //加载动画
 lv_obj_t * loadingIcon;
 lv_obj_t * QRCodeContainer;
 bool anim_remove_status = false;
+
+void tftEndWrite(){
+  tft.endWrite();
+}
+
+lv_obj_t * getScreen(){
+  return screen;
+}
 
 
 void opa_exec_cb(lv_obj_t * obj, lv_opa_t t){
@@ -41,6 +49,8 @@ void remove_loading_anim_cb(lv_obj_t * obj, lv_opa_t t, void (*Callback)(void)){
   opa_exec_cb(obj, t);
   if(t == LV_OPA_0){
     anim_remove_status = true;
+    del_loadingContainer();
+    Serial.println("删除loading");
   }
 }  
 
@@ -58,6 +68,10 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
   tft.startWrite();
   tft.setAddrWindow(area->x1, area->y1, w, h);
   tft.pushColors(&color_p->full, w * h, true);
+  // tft.pushPixelsDMA(&color_p->full, w * h);
+  // tft.pushImageDMA(area->x1, area->y1, w, h, &color_p->full);
+  // tft.pushImageDMA();
+  // tft.dmaWait();
   tft.endWrite();
 
   lv_disp_flush_ready(disp);
@@ -69,10 +83,12 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
  */
 void gui_config_init(void){
   //屏幕背光采用PWM调光
-  // ledcSetup(10, 5000/*freq*/, 10 /*resolution*/);
-  // ledcAttachPin(TFT_BL, 10);
+  ledcSetup(10, 5000,13);
+  ledcAttachPin(TFT_BL, 10);
   // analogReadResolution(10); 
-  // ledcWrite(10,1024);
+  ledcWrite(10,1024);
+  
+
   lv_init();
 
   #if USE_LV_LOG != 0
@@ -91,6 +107,10 @@ void gui_config_init(void){
   disp_drv.flush_cb = my_disp_flush;
   disp_drv.buffer = &disp_buf;
   lv_disp_drv_register(&disp_drv);
+  // ledcSetup(10, 5000,10);
+  // ledcAttachPin(TFT_BL, 10);
+  // // analogReadResolution(10); 
+  // ledcWrite(10,1024);
 }
 
 /**
@@ -99,7 +119,7 @@ void gui_config_init(void){
  */
 void init_page(void){
   //初始化屏幕
-  screen = lv_obj_create(lv_scr_act(), NULL); //创建屏幕
+  screen = lv_obj_create(lv_scr_act(), NULL);
   static lv_style_t screenStyle;
   lv_style_init(&screenStyle);
   lv_obj_set_width(screen, SCREEN_WIDTH);
@@ -184,8 +204,7 @@ void del_loadingContainer(void){
 void show_QR_code(void){
   delay(600);
   Serial.println("显示二维码");
-  del_loadingContainer();
-  
+  // del_loadingContainer();
 
   QRCodeContainer = lv_obj_create(screen, NULL);
   static lv_style_t containerStyle;
