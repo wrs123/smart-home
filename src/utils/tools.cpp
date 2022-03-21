@@ -8,3 +8,13 @@
  * @copyright Copyright (c) 2022
  * 
  */
+#include "tools.h"
+
+/**
+ * @brief 
+ * 获取网络时间
+ */
+void getNetworkTime(void){
+
+
+}

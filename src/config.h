@@ -12,6 +12,16 @@
 #define CONFIG_H
 
 
+#include "./assets/fonts/zcool_kuhei_24.h"
+// #include "./assets/fonts/dgital_number_32.h"
+#include "./assets/fonts/dgital_number_50.h"
+#include "./assets/fonts/dgital_number_25.h"
+
+LV_FONT_DECLARE(zcool_kuhei_24);
+// LV_FONT_DECLARE(dgital_number_32);
+LV_FONT_DECLARE(dgital_number_50);
+LV_FONT_DECLARE(dgital_number_25);
+
 #ifndef LOADING_ICON
     #define LOADING_ICON 
 #endif //loading_icon
@@ -51,11 +61,11 @@
 #endif //MQ4_PIN
 
 #ifndef BUZZER_PIN
-    #define BUZZER_PIN 39 //蜂鸣器引脚
+    #define BUZZER_PIN 32 //蜂鸣器引脚
 #endif //BUZZER_PIN
 
 #ifndef HC_SR505_PIN
-    #define HC_SR505_PIN 2 //人体传感器引脚
+    #define HC_SR505_PIN 4 //人体传感器引脚
 #endif //HC_SR505_PIN
 
 

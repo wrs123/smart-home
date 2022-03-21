@@ -15,7 +15,9 @@
 #include <SPI.h>
 #include <TFT_eSPI.h>
 #include <lvgl.h>
+// #include "../assets/fonts/HarmonyOS_Sans_SC_Regular_24.h"
 
+// LV_FONT_DECLARE(HarmonyOS_Sans_SC_Regular_24);
 
 TFT_eSPI tft = TFT_eSPI(); //初始化tft对象
 lv_obj_t * screen;
@@ -83,7 +85,7 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
  */
 void gui_config_init(void){
   //屏幕背光采用PWM调光
-  ledcSetup(10, 5000,13);
+  ledcSetup(10, 5000,12);
   ledcAttachPin(TFT_BL, 10);
   // analogReadResolution(10); 
   ledcWrite(10,1024);
@@ -125,7 +127,7 @@ void init_page(void){
   lv_obj_set_width(screen, SCREEN_WIDTH);
   lv_obj_set_height(screen, SCREEN_HEIGHT);
   lv_style_set_border_width(&screenStyle, LV_STATE_DEFAULT, 0);
-  lv_style_set_bg_color(&screenStyle, LV_STATE_DEFAULT, lv_color_hex(0x808695));
+  lv_style_set_bg_color(&screenStyle, LV_STATE_DEFAULT, lv_color_hex(0x9dacc3));
   lv_obj_add_style(screen, LV_LABEL_PART_MAIN, &screenStyle);
 
   loadingContainer = lv_obj_create(screen, NULL);
@@ -134,19 +136,21 @@ void init_page(void){
   lv_obj_set_width(loadingContainer, TFT_WIDTH);
   lv_obj_set_height(loadingContainer, TFT_HEIGHT);
   lv_style_set_border_width(&containerStyle, LV_STATE_DEFAULT, 0);
-  lv_style_set_bg_color(&containerStyle, LV_STATE_DEFAULT, lv_color_hex(0x808695));
+  
+    lv_style_set_bg_opa(&containerStyle, LV_STATE_DEFAULT, LV_OPA_TRANSP);
+  // lv_style_set_bg_color(&containerStyle, LV_STATE_DEFAULT, lv_color_hex(0xa7b6cd));
   lv_obj_add_style(loadingContainer, LV_LABEL_PART_MAIN, &containerStyle);
 
   initText = lv_label_create(loadingContainer, NULL);
-  lv_label_set_text(initText, "initializing wifi");
+  lv_label_set_text(initText, "系统初始化中");
   lv_label_set_long_mode(initText, LV_LABEL_LONG_BREAK);
   lv_obj_set_width(initText, TFT_WIDTH);
   lv_obj_align(initText, loadingContainer, LV_ALIGN_CENTER, 0, 50);
   lv_label_set_align(initText, LV_LABEL_ALIGN_CENTER);
   static lv_style_t tempDisplay_style;
 	lv_style_init(&tempDisplay_style);
-  lv_style_set_text_font(&tempDisplay_style, LV_STATE_DEFAULT, &lv_font_montserrat_22);
-  lv_style_set_text_color(&tempDisplay_style, LV_STATE_DEFAULT, lv_color_hex(0x17233d));
+  lv_style_set_text_font(&tempDisplay_style, LV_STATE_DEFAULT, &zcool_kuhei_24);
+  lv_style_set_text_color(&tempDisplay_style, LV_STATE_DEFAULT, lv_color_hex(0x33414c));
   lv_obj_add_style(initText, LV_LABEL_PART_MAIN, &tempDisplay_style);
 
   loadingIcon = lv_img_create(loadingContainer, NULL);

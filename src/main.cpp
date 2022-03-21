@@ -30,9 +30,15 @@
 #include "utils/custom_print.h"
 #include "utils/custom_wifi.h"
 #include "utils/data_ctr.h"
+#include "devices/dht11.h"
+#include "devices/hcsr505.h"
+#include "devices/buzzer.h"
+
 /* page include */
 #include "page/init_page.h"
 #include "page/main_page.h"
+
+
 
 
 // MQ135 mq135_sensor = MQ135(MQ135_PIN);
@@ -46,14 +52,10 @@ bool connected = false;
 bool ledStatus = false;
 DHT_Unified dht(DHT11_PIN, DHTTYPE);  //DHT11传感器初始化
 uint32_t delayMS;
-long previousTime=0;
+// long previousTime=0;
 long wifiLoadTime=0;
 float temperature = 21.0; 
 float humidity = 25.0; 
-String temp = "0.0";
-String hum = "8.0";
-lv_obj_t * tempDisplay; //温度控件
-lv_obj_t * humDisplay; //湿度控件
 bool GUIInit = false;
 bool initStatus = false;
 
@@ -210,70 +212,68 @@ void getMessage(void){
 }
 
 //socket 数据发送
-void sendTHData(void){  
-  unsigned long currentTime=millis();
-  if(currentTime - previousTime > 2000){
-    previousTime=currentTime;
-    String param = "{'from': '/pico', 'to': '/app', 'type':'normal', data: {}";
-    String ouput_param;
-    DynamicJsonDocument dataDoc(1024);
-    deserializeJson(dataDoc, param);
-    JsonObject obj = dataDoc.as<JsonObject>();
+// void sendTHData(void){  
+//   unsigned long currentTime=millis();
+//   if(currentTime - previousTime > 2000){
+//     previousTime=currentTime;
+//     String param = "{'from': '/pico', 'to': '/app', 'type':'normal', data: {}";
+//     String ouput_param;
+//     DynamicJsonDocument dataDoc(1024);
+//     deserializeJson(dataDoc, param);
+//     JsonObject obj = dataDoc.as<JsonObject>();
 
-    sensors_event_t event;
-    dht.temperature().getEvent(&event);
+//     sensors_event_t event;
+//     dht.temperature().getEvent(&event);
 
-    if (isnan(event.temperature)) {
-      Serial.println(F("Error reading temperature!"));
-    }
-    else {
-      obj[String("data")][String("temp")] = event.temperature;
-      // Serial.print(F("Temperature: "));
-      // Serial.print(event.temperature);
-      // Serial.println(F("°C"));
-    }
-    // Get humidity event and print its value.
-    dht.humidity().getEvent(&event);
-    if (isnan(event.relative_humidity)) {
-      Serial.println(F("Error reading humidity!"));
-    }
-    else {
-      obj[String("data")][String("hum")] = event.relative_humidity;
-      // Serial.print(F("Humidity: "));
-      // Serial.print(event.relative_humidity);
-      // Serial.println(F("%"));
-    }
-    serializeJson(dataDoc, ouput_param); 
+//     if (isnan(event.temperature)) {
+//       Serial.println(F("Error reading temperature!"));
+//     }
+//     else {
+//       obj[String("data")][String("temp")] = event.temperature;
+//       // Serial.print(F("Temperature: "));
+//       // Serial.print(event.temperature);
+//       // Serial.println(F("°C"));
+//     }
+//     // Get humidity event and print its value.
+//     dht.humidity().getEvent(&event);
+//     if (isnan(event.relative_humidity)) {
+//       Serial.println(F("Error reading humidity!"));
+//     }
+//     else {
+//       obj[String("data")][String("hum")] = event.relative_humidity;
+//       // Serial.print(F("Humidity: "));
+//       // Serial.print(event.relative_humidity);
+//       // Serial.println(F("%"));
+//     }
+//     serializeJson(dataDoc, ouput_param); 
 
-    // client.send(ouput_param);
-    // float rzero = mq135_sensor.getRZero();
-    // float correctedRZero = mq135_sensor.getCorrectedRZero(temperature, humidity);
-    // float resistance = mq135_sensor.getResistance();
-    // float ppm = mq135_sensor.getPPM();
-    // float correctedPPM = mq135_sensor.getCorrectedPPM(temperature, humidity);
+//     // client.send(ouput_param);
+//     // float rzero = mq135_sensor.getRZero();
+//     // float correctedRZero = mq135_sensor.getCorrectedRZero(temperature, humidity);
+//     // float resistance = mq135_sensor.getResistance();
+//     // float ppm = mq135_sensor.getPPM();
+//     // float correctedPPM = mq135_sensor.getCorrectedPPM(temperature, humidity);
 
-    // Serial.print("MQ135 RZero: ");
-    // Serial.println(rzero);
-    // Serial.print("\t Corrected RZero: ");
-    // Serial.println(correctedRZero);
-    // Serial.print("\t Resistance: ");
-    // Serial.println(resistance);
-    // Serial.print("\t PPM: ");
-    // Serial.println(ppm);
-    // Serial.print("\t Corrected PPM: ");
-    // Serial.print(correctedPPM);
-    // Serial.println("ppm");
-    }
-}
+//     // Serial.print("MQ135 RZero: ");
+//     // Serial.println(rzero);
+//     // Serial.print("\t Corrected RZero: ");
+//     // Serial.println(correctedRZero);
+//     // Serial.print("\t Resistance: ");
+//     // Serial.println(resistance);
+//     // Serial.print("\t PPM: ");
+//     // Serial.println(ppm);
+//     // Serial.print("\t Corrected PPM: ");
+//     // Serial.print(correctedPPM);
+//     // Serial.println("ppm");
+//     }
+// }
 
 
 void taskOne(void *parameter)
 { 
   wifi_init();
   while(!get_wifi_connect_status()){
-    
-    delay(50);
-    
+    delay(50); 
   }
   // IPAddress ip = WiFi.localIP();
   // Serial.println(ip);
@@ -289,6 +289,10 @@ void taskOne(void *parameter)
   // delay(10000);
   IPAddress ip = WiFi.localIP();
   Serial.println(ip);
+  //初始化红外传感器
+  init_hcsr505(); 
+  //初始化蜂鸣器
+  init_buzzer();
   initStatus = true;
   Serial.println("Ending task 1");
   vTaskDelete(NULL);
@@ -320,7 +324,7 @@ void setup() {
   // initLED();
   // //初始化温湿度传感器
   // DHT11_init();
-  // pinMode(33, OUTPUT);
+  
   // digitalWrite(33, LOW);
 }
 
@@ -337,7 +341,6 @@ void loop() {
   // if(WiFi.status() == WL_CONNECTED && GUIInit && initStatus){
     // tftEndWrite();
   lv_task_handler(); /* let the GUI do its work */
-  
   //   // lv_label_set_text_fmt(tempDisplay, "%s°C", temp);
   // }
      
@@ -362,7 +365,12 @@ void loop() {
         Serial.print(WiFi.localIP());
         GUIInit = true;
     }
-    // delay(100);
+
+    if(WiFi.status() == WL_CONNECTED && initStatus){
+
+      // hcsr505_get_value(open_buzzer);
+    }
+    //    
     // Serial.printf("touch:%d\r\n", touchRead(T0));
     //  if(touchRead(T0) < 40){
     //   NVSRemove();
