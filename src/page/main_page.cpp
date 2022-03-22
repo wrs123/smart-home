@@ -308,12 +308,12 @@ void main_page(void){
  * @brief 
  * 更新时间
  */
-void update_time(void){
+void update_time(String time){
   unsigned long currentTime=millis();
-   if(currentTime - update_time_dealy > 1000){
+   if(currentTime - update_time_dealy > 2000){
     update_time_dealy=currentTime;
-    time_h +=1;
-    time_m +=1;
-    lv_label_set_text_fmt(time_label, "%d:%d", time_h, time_m);
+    lv_label_set_text_fmt(time_label, "%s", time);
    }
 }
+
+

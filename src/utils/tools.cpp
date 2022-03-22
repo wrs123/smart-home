@@ -10,32 +10,33 @@
  */
 #include "tools.h"
 #include <Arduino.h>
-#include <HTTPClient.h>
-#include <ArduinoJson.h>
-
 
 
 /**
  * @brief 
- * 获取网络时间
+ * 获取网络时间=
  */
-void getNetworkTime(void){
+String getNetworkTime(void){
 
-    DynamicJsonDocument doc(1024);
-    HttpClient http;
-    String resBuff;
 
-    http.begin(TIME_API_URL);
-    int httpCode = http.get();
+   
+        
+        const char *ntpServer = "pool.ntp.org";
+        const long gmtOffset_sec = 8 * 3600;
+        const int daylightOffset_sec = 0;
+        String time = "err";
 
-    if(httpCode > 0){
-        if(httpCode == HTTP_CODE_OK){
-            resBuff = http.getString();
-            Serial.println(resBuff);
+        configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+
+        struct tm timeinfo;
+        if (!getLocalTime(&timeinfo))
+        {
+            Serial.println("Failed to obtain time");
+            return time;
         }
-    }else{
 
-    }
-    http.end();
+        time = (String(timeinfo.tm_hour)+":"+String(timeinfo.tm_min));
+        // Serial.println(time); // 格式化输出
+        return time;
     
 }   

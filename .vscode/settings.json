@@ -55,6 +55,7 @@
         "data_ctr.h": "c",
         "arduino.h": "c",
         "stdbool.h": "c",
-        "preferences.h": "c"
+        "preferences.h": "c",
+        "regex": "cpp"
     }
 }

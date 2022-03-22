@@ -33,6 +33,7 @@
 #include "devices/dht11.h"
 #include "devices/hcsr505.h"
 #include "devices/buzzer.h"
+#include "utils/tools.h"
 
 /* page include */
 #include "page/init_page.h"
@@ -367,12 +368,13 @@ void loop() {
     }
 
     if(WiFi.status() == WL_CONNECTED && initStatus){
-
-      // hcsr505_get_value(open_buzzer);
+      
+      update_time(getNetworkTime()); //更新时间
+      //hcsr505_get_value(open_buzzer);
     }
     //    
     // Serial.printf("touch:%d\r\n", touchRead(T0));
-    //  if(touchRead(T0) < 40){
+    //  if(touchRead(T0) < 40){  
     //   NVSRemove();
     //  }
 }

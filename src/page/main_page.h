@@ -11,9 +11,13 @@
 #ifndef MAIN_PAGE_H
 #define MAIN_PAGE_H
 
+#include <Arduino.h>
+
 
 
 
 void main_page(void);
+
+void update_time(String time);
 
 #endif
