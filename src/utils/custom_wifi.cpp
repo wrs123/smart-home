@@ -109,7 +109,7 @@ void Http_server(void){
  */
 bool WiFi_connect(String data, bool status){
   if(status){
-    DynamicJsonDocument doc(1024);
+    DynamicJsonDocument doc(512);
     deserializeJson(doc, data);
     String ssid = doc["wifi_ssid"]; 
     String password =doc["wifi_password"] ;

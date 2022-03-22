@@ -22,7 +22,8 @@
 TFT_eSPI tft = TFT_eSPI(); //初始化tft对象
 lv_obj_t * screen;
 static lv_disp_buf_t disp_buf; //初始化屏幕数据缓存
-static lv_color_t buf[LV_HOR_RES_MAX * 45];
+static lv_color_t buf[SCREEN_WIDTH *  120];
+// static lv_color_t buf2[SCREEN_WIDTH *  60];
 lv_obj_t * loadingContainer;
 lv_obj_t * initText;
 lv_anim_t loading_anim; //加载动画
@@ -71,9 +72,6 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
   tft.setAddrWindow(area->x1, area->y1, w, h);
   tft.pushColors(&color_p->full, w * h, true);
   // tft.pushPixelsDMA(&color_p->full, w * h);
-  // tft.pushImageDMA(area->x1, area->y1, w, h, &color_p->full);
-  // tft.pushImageDMA();
-  // tft.dmaWait();
   tft.endWrite();
 
   lv_disp_flush_ready(disp);
@@ -100,7 +98,7 @@ void gui_config_init(void){
   //屏幕初始化
   tft.begin(); /* TFT init */
   tft.initDMA();
-  lv_disp_buf_init(&disp_buf, buf, NULL,  LV_HOR_RES_MAX* 45);
+  lv_disp_buf_init(&disp_buf, buf, NULL,  SCREEN_WIDTH * 120);
   //显示刷新接口
   lv_disp_drv_t disp_drv;
   lv_disp_drv_init(&disp_drv);

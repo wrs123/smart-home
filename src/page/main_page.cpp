@@ -104,7 +104,7 @@ void main_page(void){
   lv_obj_t * tempContainer = lv_obj_create(topLeftContainer, NULL);
   static lv_style_t tempContainerStyle;
   lv_style_init(&tempContainerStyle);
-  lv_obj_set_width(tempContainer, 50);
+  // lv_obj_set_height(tempContainer, 50);
   lv_obj_set_y(tempContainer, 20);
   lv_obj_set_width(tempContainer, (SCREEN_WIDTH-20));
   lv_style_set_border_width(&tempContainerStyle, LV_STATE_DEFAULT, 0);
@@ -132,18 +132,37 @@ void main_page(void){
   lv_style_set_text_color(&tempDisplaySign_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
   lv_obj_add_style(tempDisplaySign, LV_LABEL_PART_MAIN, &tempDisplaySign_style);
 
+  //湿度显示容器
+  lv_obj_t * humContainer = lv_obj_create(topLeftContainer, NULL);
+  static lv_style_t humContainerStyle;
+  lv_style_init(&humContainerStyle);
+  // lv_obj_set_height(humContainer, 50);
+  lv_obj_set_y(humContainer, 70);
+  lv_obj_set_width(humContainer, (SCREEN_WIDTH-20));
+  lv_style_set_border_width(&humContainerStyle, LV_STATE_DEFAULT, 0);
+  lv_style_set_radius(&humContainerStyle, LV_STATE_DEFAULT, 0);
+  lv_style_set_bg_opa(&humContainerStyle, LV_STATE_DEFAULT, 0);
+  lv_obj_add_style(humContainer, LV_LABEL_PART_MAIN, &humContainerStyle);
+
   //湿度显示
-  humDisplay = lv_label_create(topLeftContainer, NULL);
+  humDisplay = lv_label_create(humContainer, NULL);
   hum = "8.0";
-  lv_label_set_text_fmt(humDisplay, "%s%%", hum);
-  lv_obj_align(humDisplay, topLeftContainer, LV_ALIGN_IN_BOTTOM_LEFT, 0, -40);
+  lv_label_set_text_fmt(humDisplay, "%s", hum);
+  lv_obj_align(humDisplay, humContainer, LV_ALIGN_IN_TOP_LEFT, 0, 0);
   static lv_style_t humDisplay_style;
 	lv_style_init(&humDisplay_style);
   lv_style_set_text_font(&humDisplay_style, LV_STATE_DEFAULT, &dgital_number_50);
   lv_style_set_text_color(&humDisplay_style, LV_STATE_DEFAULT, lv_color_hex(0xf8f8f9));
   lv_obj_add_style(humDisplay, LV_LABEL_PART_MAIN, &humDisplay_style);
 
-  
+  lv_obj_t * humDisplaySign = lv_label_create(humContainer, NULL);
+  lv_label_set_text(humDisplaySign, "%");
+  lv_obj_align(humDisplaySign, humContainer, LV_ALIGN_IN_BOTTOM_LEFT, 82,-4);
+  static lv_style_t humDisplaySign_style;
+	lv_style_init(&humDisplaySign_style);
+  lv_style_set_text_font(&humDisplaySign_style, LV_STATE_DEFAULT, &dgital_number_25);
+  lv_style_set_text_color(&humDisplaySign_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+  lv_obj_add_style(humDisplaySign, LV_LABEL_PART_MAIN, &humDisplaySign_style);
 
 
   //按钮1
