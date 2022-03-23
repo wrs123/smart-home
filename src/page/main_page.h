@@ -13,11 +13,8 @@
 
 #include <Arduino.h>
 
-
-
-
 void main_page(void);
 
-void update_time(String time);
+void update_time(void);
 
 #endif

@@ -37,12 +37,12 @@ bool NVSGet(char *names[], int arr_len, bool (*Callback)(String, bool)){
     return false;
   }
   for(int i=0; i<arr_len;i++){
-    Serial.println(names[i]);//查询剩余空间
+    Serial.print(String(names[i])+":");//查询剩余空间
     Serial.println(prefs.getString(names[i]).c_str());
     doc[names[i]] = prefs.getString(names[i]);
   }
   serializeJson(doc, result);
-  Serial.println(result);
+  // Serial.println(result);
   
   Callback(result, true);
   //结束NVS访问

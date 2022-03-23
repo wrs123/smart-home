@@ -11,22 +11,20 @@
 #include "main_page.h"
 #include "../config.h"
 #include "init_page.h"
+#include "../utils/tools.h"
+
 #include <Arduino.h>
 #include <SPI.h>
 #include <TFT_eSPI.h>
 #include <lvgl.h>
 
-
-
-int time_h;
-int time_m;
-lv_obj_t * time_label;
-lv_obj_t * icon;
-long update_time_dealy=0;
-String temp = "0.0";
-String hum = "8.0";
-lv_obj_t * tempDisplay; //温度控件
-lv_obj_t * humDisplay; //湿度控件
+static lv_obj_t * time_label;
+static lv_obj_t * icon;
+static long update_time_dealy=0;
+static String temp = "0.0";
+static String hum = "8.0";
+static lv_obj_t * tempDisplay; //温度控件
+static lv_obj_t * humDisplay; //湿度控件
 
 
 
@@ -75,15 +73,13 @@ void main_page(void){
   lv_canvas_set_palette(status_bar, 1, LV_COLOR_TRANSP);
 
   //时间显示
-  time_h = 00;
-  time_m = 00;
   static lv_style_t time_style;
   lv_style_init(&time_style);
   time_label = lv_label_create(status_bar, NULL);
   lv_style_set_text_font(&time_style, LV_STATE_DEFAULT, &lv_font_montserrat_20);
   lv_obj_add_style(time_label, LV_LABEL_PART_MAIN, &time_style);
   lv_style_set_text_color(&time_style, LV_STATE_DEFAULT, lv_color_hex(0xf8f8f9));
-  lv_label_set_text_fmt(time_label, "%d:%d", time_h, time_m);
+  lv_label_set_text_fmt(time_label, "%s", "null");
   lv_obj_align(time_label, status_bar, LV_ALIGN_IN_LEFT_MID,30,0);
 
   //wifi连接状态
@@ -304,14 +300,16 @@ void main_page(void){
 
 }
 
+
 /**
  * @brief 
  * 更新时间
  */
-void update_time(String time){
+void update_time(void){
   unsigned long currentTime=millis();
    if(currentTime - update_time_dealy > 2000){
-    update_time_dealy=currentTime;
+    update_time_dealy = currentTime;
+    String time = getNowTime();
     lv_label_set_text_fmt(time_label, "%s", time);
    }
 }

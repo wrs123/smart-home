@@ -18,6 +18,8 @@
 #endif //TIME_API_URL
 
 
-String getNetworkTime(void);
+void initNetworkTime(void);
+
+String getNowTime(void);
 
 #endif

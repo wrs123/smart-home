@@ -273,9 +273,9 @@ void getMessage(void){
 void taskOne(void *parameter)
 { 
   wifi_init();
-  while(!get_wifi_connect_status()){
-    delay(50); 
-  }
+  // while(!get_wifi_connect_status()){
+  //   delay(50); 
+  // }
   // IPAddress ip = WiFi.localIP();
   // Serial.println(ip);
   // lv_label_set_text_fmt(initText, "ip:%d.%d.%d.%d", ip[0],ip[1],ip[2],ip[3]);
@@ -288,14 +288,14 @@ void taskOne(void *parameter)
   //   }
   // }
   // delay(10000);
-  IPAddress ip = WiFi.localIP();
-  Serial.println(ip);
+  //初始化网络时间
+  initNetworkTime();
   //初始化红外传感器
   init_hcsr505(); 
   //初始化蜂鸣器
   init_buzzer();
   initStatus = true;
-  Serial.println("Ending task 1");
+  Serial.println("关闭任务1");
   vTaskDelete(NULL);
 }
 
@@ -362,14 +362,12 @@ void loop() {
     if(WiFi.status() == WL_CONNECTED && !GUIInit && initStatus){
       removeLoading();
       main_page();
-       Serial.println("IP address:");
-        Serial.print(WiFi.localIP());
-        GUIInit = true;
+      GUIInit = true;
     }
 
     if(WiFi.status() == WL_CONNECTED && initStatus){
-      
-      update_time(getNetworkTime()); //更新时间
+      update_time(); //更新时间
+      // getNetworkTime();
       //hcsr505_get_value(open_buzzer);
     }
     //    

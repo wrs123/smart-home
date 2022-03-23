@@ -45,6 +45,9 @@ void wifi_init(void){
   //获取存储的wifi数据
   NVSGet(key, 2, WiFi_connect);
 
+  while(!wifi_connect_status){
+    delay(50); 
+  }
 }
 
 /**
@@ -118,7 +121,7 @@ bool WiFi_connect(String data, bool status){
       delay(300);
       Serial.print(".");
     }
-    Serial.print("wifi ok");
+    Serial.println("wifi连接完成");
     wifi_connect_status = true;
     return true;
   }
