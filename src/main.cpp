@@ -132,16 +132,6 @@ void socket_status_check(){
 }
 
 
-//随机温度
-int radomTemp(void){
-   int a;
-    srand((unsigned)time(NULL));
-    a = rand() % 10+15;
-    return a;
-}
-
-
-
 /**
  * @brief 
  *  socket数据接收

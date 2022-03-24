@@ -79,6 +79,7 @@ void tempContainer(lv_obj_t * parent){
  * 湿度显示
  */
 void humContainer(lv_obj_t * parent){
+
     //湿度显示容器
     lv_obj_t * hum_container = lv_obj_create(parent, NULL);
     static lv_style_t hum_container_tyle;
@@ -91,10 +92,19 @@ void humContainer(lv_obj_t * parent){
     lv_style_set_bg_opa(&hum_container_tyle, LV_STATE_DEFAULT, 0);
     lv_obj_add_style(hum_container, LV_LABEL_PART_MAIN, &hum_container_tyle);
 
+    lv_obj_t * humDisplayTitle = lv_label_create(hum_container, NULL);
+    lv_label_set_text(humDisplayTitle, "湿度");
+    lv_obj_align(humDisplayTitle, hum_container, LV_ALIGN_IN_BOTTOM_LEFT, 0,0);
+    static lv_style_t humDisplayTitle_style;
+    lv_style_init(&humDisplayTitle_style);
+    lv_style_set_text_font(&humDisplayTitle_style, LV_STATE_DEFAULT, &hmos_sanc_sc_regular_18);
+    lv_style_set_text_color(&humDisplayTitle_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+    lv_obj_add_style(humDisplayTitle, LV_LABEL_PART_MAIN, &humDisplayTitle_style);
+
     //湿度显示
     hum_display = lv_label_create(hum_container, NULL);
     lv_label_set_text_fmt(hum_display, "%s", hum);
-    lv_obj_align(hum_display, hum_container, LV_ALIGN_IN_TOP_LEFT, 0, 0);
+    lv_obj_align(hum_display, hum_container, LV_ALIGN_IN_TOP_LEFT, 45, 0);
     static lv_style_t hum_display_style;
     lv_style_init(&hum_display_style);
     lv_style_set_text_font(&hum_display_style, LV_STATE_DEFAULT, &dgital_number_50);
@@ -103,7 +113,7 @@ void humContainer(lv_obj_t * parent){
 
     lv_obj_t * humDisplaySign = lv_label_create(hum_container, NULL);
     lv_label_set_text(humDisplaySign, "%");
-    lv_obj_align(humDisplaySign, hum_container, LV_ALIGN_IN_BOTTOM_LEFT, 82,-4);
+    lv_obj_align(humDisplaySign, hum_container, LV_ALIGN_IN_BOTTOM_LEFT, 130,-4);
     static lv_style_t humDisplaySign_style;
     lv_style_init(&humDisplaySign_style);
     lv_style_set_text_font(&humDisplaySign_style, LV_STATE_DEFAULT, &dgital_number_25);

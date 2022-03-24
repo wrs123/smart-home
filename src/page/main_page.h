@@ -12,7 +12,7 @@
 #define MAIN_PAGE_H
 
 #include <Arduino.h>
-#include "../components./main_info_component.h"
+#include "../components/main_info_component.h"
 
 void main_page(void);
 
