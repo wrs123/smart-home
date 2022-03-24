@@ -12,9 +12,12 @@
 #define MAIN_PAGE_H
 
 #include <Arduino.h>
+#include "../components./main_info_component.h"
 
 void main_page(void);
 
 void update_time(void);
+
+void update_temp(void);
 
 #endif

@@ -50,3 +50,10 @@ String getNowTime(void){
     return now_time;
    
 }
+
+
+ char* dtostr(char *str, float d)
+    {
+        sprintf(str, "%f", d);
+        return str;
+    }

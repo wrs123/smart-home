@@ -17,9 +17,6 @@
 #include <time.h>
 #include <stdio.h>
 #include <ArduinoJson.h>
-#include <Adafruit_Sensor.h>
-#include "DHT.h"
-#include <DHT_U.h>
 #include "MQ135.h"
 
 /*==========custom include============= */
@@ -51,7 +48,6 @@ using namespace websockets;
 WebsocketsClient client;//Enter server adress
 bool connected = false;
 bool ledStatus = false;
-DHT_Unified dht(DHT11_PIN, DHTTYPE);  //DHT11传感器初始化
 uint32_t delayMS;
 // long previousTime=0;
 long wifiLoadTime=0;
@@ -135,33 +131,6 @@ void socket_status_check(){
     });
 }
 
-//初始化dht11
-void DHT11_init(){
-  dht.begin();
-   sensor_t sensor;
-  dht.temperature().getSensor(&sensor);
-  Serial.println(F("------------------------------------"));
-  Serial.println(F("Temperature Sensor"));
-  Serial.print  (F("Sensor Type: ")); Serial.println(sensor.name);
-  Serial.print  (F("Driver Ver:  ")); Serial.println(sensor.version);
-  Serial.print  (F("Unique ID:   ")); Serial.println(sensor.sensor_id);
-  Serial.print  (F("Max Value:   ")); Serial.print(sensor.max_value); Serial.println(F("℃"));
-  Serial.print  (F("Min Value:   ")); Serial.print(sensor.min_value); Serial.println(F("℃"));
-  Serial.print  (F("Resolution:  ")); Serial.print(sensor.resolution); Serial.println(F("℃"));
-  Serial.println(F("------------------------------------"));
-  // Print humidity sensor details.
-  dht.humidity().getSensor(&sensor);
-  Serial.println(F("Humidity Sensor"));
-  Serial.print  (F("Sensor Type: ")); Serial.println(sensor.name);
-  Serial.print  (F("Driver Ver:  ")); Serial.println(sensor.version);
-  Serial.print  (F("Unique ID:   ")); Serial.println(sensor.sensor_id);
-  Serial.print  (F("Max Value:   ")); Serial.print(sensor.max_value); Serial.println(F("%"));
-  Serial.print  (F("Min Value:   ")); Serial.print(sensor.min_value); Serial.println(F("%"));
-  Serial.print  (F("Resolution:  ")); Serial.print(sensor.resolution); Serial.println(F("%"));
-  Serial.println(F("------------------------------------"));
-  // Set delay between sensor readings based on sensor details.
-  delayMS = sensor.min_delay / 1000;
-}
 
 //随机温度
 int radomTemp(void){
@@ -294,6 +263,8 @@ void taskOne(void *parameter)
   init_hcsr505(); 
   //初始化蜂鸣器
   init_buzzer();
+  //初始化温湿度传感器
+  DHT11_init();
   initStatus = true;
   Serial.println("关闭任务1");
   vTaskDelete(NULL);
@@ -367,6 +338,7 @@ void loop() {
 
     if(WiFi.status() == WL_CONNECTED && initStatus){
       update_time(); //更新时间
+      update_main_info_data(); //更新温度
       // getNetworkTime();
       //hcsr505_get_value(open_buzzer);
     }

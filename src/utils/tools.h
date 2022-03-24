@@ -22,4 +22,6 @@ void initNetworkTime(void);
 
 String getNowTime(void);
 
+ char* dtostr(char *str, float d);
+
 #endif

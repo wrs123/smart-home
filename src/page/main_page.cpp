@@ -21,10 +21,6 @@
 static lv_obj_t * time_label;
 static lv_obj_t * icon;
 static long update_time_dealy=0;
-static String temp = "0.0";
-static String hum = "8.0";
-static lv_obj_t * tempDisplay; //温度控件
-static lv_obj_t * humDisplay; //湿度控件
 
 
 
@@ -51,19 +47,7 @@ void main_page(void){
   lv_obj_set_width(topContainer, SCREEN_WIDTH);
   lv_obj_set_height(topContainer, 200);
 
-
-  //初始化topLeft容器
-  lv_obj_t * topLeftContainer = lv_obj_create(topContainer, NULL);
-  static lv_style_t topLeftContainerStyle;
-  lv_style_init(&topLeftContainerStyle);
-  lv_obj_set_height(topLeftContainer, 150);
-  lv_obj_set_width(topLeftContainer, (SCREEN_WIDTH-20));
-  lv_obj_set_pos(topLeftContainer, 20, 40);
-   lv_style_set_border_width(&topLeftContainerStyle, LV_STATE_DEFAULT, 0);
-   lv_style_set_radius(&topLeftContainerStyle, LV_STATE_DEFAULT, 0);
-   lv_style_set_bg_opa(&topLeftContainerStyle, LV_STATE_DEFAULT, 0);
-  //  lv_style_set_bg_color(&topLeftContainerStyle, LV_STATE_DEFAULT, lv_color_hex(0x2d8cf0));
-   lv_obj_add_style(topLeftContainer, LV_LABEL_PART_MAIN, &topLeftContainerStyle);
+  mainInfoComponent(topContainer);
 
   //初始化状态栏容器
   lv_obj_t * status_bar = lv_canvas_create(screen, NULL);
@@ -95,70 +79,6 @@ void main_page(void){
   lv_style_set_text_color(&font_style1, LV_STATE_DEFAULT, lv_color_hex(0xf8f8f9));
   lv_label_set_text(icon, LV_SYMBOL_WIFI);
   lv_obj_align(icon, status_bar, LV_ALIGN_IN_RIGHT_MID,-30,0);
-
-  //温度显示容器
-  lv_obj_t * tempContainer = lv_obj_create(topLeftContainer, NULL);
-  static lv_style_t tempContainerStyle;
-  lv_style_init(&tempContainerStyle);
-  // lv_obj_set_height(tempContainer, 50);
-  lv_obj_set_y(tempContainer, 20);
-  lv_obj_set_width(tempContainer, (SCREEN_WIDTH-20));
-  lv_style_set_border_width(&tempContainerStyle, LV_STATE_DEFAULT, 0);
-  lv_style_set_radius(&tempContainerStyle, LV_STATE_DEFAULT, 0);
-  lv_style_set_bg_opa(&tempContainerStyle, LV_STATE_DEFAULT, 0);
-  lv_obj_add_style(tempContainer, LV_LABEL_PART_MAIN, &tempContainerStyle);
-
-  //温度显示
-  tempDisplay = lv_label_create(tempContainer, NULL);
-  temp = "26.0";
-  lv_label_set_text_fmt(tempDisplay, "%s", temp);
-  lv_obj_align(tempDisplay, tempContainer, LV_ALIGN_IN_TOP_LEFT, 0, 0);
-  static lv_style_t tempDisplay_style;
-	lv_style_init(&tempDisplay_style);
-  lv_style_set_text_font(&tempDisplay_style, LV_STATE_DEFAULT, &dgital_number_50);
-  lv_style_set_text_color(&tempDisplay_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
-  lv_obj_add_style(tempDisplay, LV_LABEL_PART_MAIN, &tempDisplay_style);
-
-  lv_obj_t * tempDisplaySign = lv_label_create(tempContainer, NULL);
-  lv_label_set_text(tempDisplaySign, "°C");
-  lv_obj_align(tempDisplaySign, tempContainer, LV_ALIGN_IN_BOTTOM_LEFT, 82,-4);
-  static lv_style_t tempDisplaySign_style;
-	lv_style_init(&tempDisplaySign_style);
-  lv_style_set_text_font(&tempDisplaySign_style, LV_STATE_DEFAULT, &dgital_number_25);
-  lv_style_set_text_color(&tempDisplaySign_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
-  lv_obj_add_style(tempDisplaySign, LV_LABEL_PART_MAIN, &tempDisplaySign_style);
-
-  //湿度显示容器
-  lv_obj_t * humContainer = lv_obj_create(topLeftContainer, NULL);
-  static lv_style_t humContainerStyle;
-  lv_style_init(&humContainerStyle);
-  // lv_obj_set_height(humContainer, 50);
-  lv_obj_set_y(humContainer, 70);
-  lv_obj_set_width(humContainer, (SCREEN_WIDTH-20));
-  lv_style_set_border_width(&humContainerStyle, LV_STATE_DEFAULT, 0);
-  lv_style_set_radius(&humContainerStyle, LV_STATE_DEFAULT, 0);
-  lv_style_set_bg_opa(&humContainerStyle, LV_STATE_DEFAULT, 0);
-  lv_obj_add_style(humContainer, LV_LABEL_PART_MAIN, &humContainerStyle);
-
-  //湿度显示
-  humDisplay = lv_label_create(humContainer, NULL);
-  hum = "8.0";
-  lv_label_set_text_fmt(humDisplay, "%s", hum);
-  lv_obj_align(humDisplay, humContainer, LV_ALIGN_IN_TOP_LEFT, 0, 0);
-  static lv_style_t humDisplay_style;
-	lv_style_init(&humDisplay_style);
-  lv_style_set_text_font(&humDisplay_style, LV_STATE_DEFAULT, &dgital_number_50);
-  lv_style_set_text_color(&humDisplay_style, LV_STATE_DEFAULT, lv_color_hex(0xf8f8f9));
-  lv_obj_add_style(humDisplay, LV_LABEL_PART_MAIN, &humDisplay_style);
-
-  lv_obj_t * humDisplaySign = lv_label_create(humContainer, NULL);
-  lv_label_set_text(humDisplaySign, "%");
-  lv_obj_align(humDisplaySign, humContainer, LV_ALIGN_IN_BOTTOM_LEFT, 82,-4);
-  static lv_style_t humDisplaySign_style;
-	lv_style_init(&humDisplaySign_style);
-  lv_style_set_text_font(&humDisplaySign_style, LV_STATE_DEFAULT, &dgital_number_25);
-  lv_style_set_text_color(&humDisplaySign_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
-  lv_obj_add_style(humDisplaySign, LV_LABEL_PART_MAIN, &humDisplaySign_style);
 
 
   //按钮1
@@ -313,5 +233,6 @@ void update_time(void){
     lv_label_set_text_fmt(time_label, "%s", time);
    }
 }
+
 
 

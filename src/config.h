@@ -11,16 +11,21 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <SPI.h>
+#include <TFT_eSPI.h>
+
 
 #include "./assets/fonts/zcool_kuhei_24.h"
 // #include "./assets/fonts/dgital_number_32.h"
 #include "./assets/fonts/dgital_number_50.h"
 #include "./assets/fonts/dgital_number_25.h"
+#include "./assets/fonts/hmos_sanc_sc_regular_18.h"
 
 LV_FONT_DECLARE(zcool_kuhei_24);
 // LV_FONT_DECLARE(dgital_number_32);
 LV_FONT_DECLARE(dgital_number_50);
 LV_FONT_DECLARE(dgital_number_25);
+LV_FONT_DECLARE(hmos_sanc_sc_regular_18);
 
 #ifndef LOADING_ICON
     #define LOADING_ICON 
