@@ -29,9 +29,10 @@ bool wifi_connect_status = false;
 
 /**
  * @brief Get the connect status object
- * 获取连接状态
+ * 获取wifi连接状态
  */
-bool get_wifi_connect_status(void){
+bool get_wifi_connect_state(void){
+  wifi_connect_status  = WiFi.status() != WL_CONNECTED ? false : true;
   return wifi_connect_status;
 }
 
@@ -100,8 +101,6 @@ void Http_server(void){
   Serial.println("服务器已启动");
 }
 
-
-
 /**
  * @brief 
  * 连接wifi 
@@ -132,5 +131,7 @@ bool WiFi_connect(String data, bool status){
   // delay(300);
   return true;
 }
+
+
 
 

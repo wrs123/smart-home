@@ -320,13 +320,17 @@ void loop() {
     //   socketClientInit();
     //   delay(1500);
     // }
-    if(WiFi.status() == WL_CONNECTED && !GUIInit && initStatus){
+    if((WiFi.status() == WL_CONNECTED) && !GUIInit && initStatus){
       removeLoading();
       main_page();
       GUIInit = true;
     }
 
-    if(WiFi.status() == WL_CONNECTED && initStatus){
+    if(GUIInit && initStatus){
+      set_wifi_icon();
+    }
+
+    if((WiFi.status() == WL_CONNECTED) && GUIInit && initStatus){
       update_time(); //更新时间
       update_main_info_data(); //更新温度
       // getNetworkTime();

@@ -11,7 +11,6 @@
 #include "main_page.h"
 #include "../config.h"
 #include "init_page.h"
-#include "../utils/tools.h"
 
 #include <Arduino.h>
 #include <SPI.h>
@@ -21,6 +20,7 @@
 static lv_obj_t * time_label;
 static lv_obj_t * icon;
 static long update_time_dealy=0;
+static long set_wifi_state_dealy = 0;
 
 
 
@@ -232,6 +232,19 @@ void update_time(void){
     String time = getNowTime();
     lv_label_set_text_fmt(time_label, "%s", time);
    }
+}
+
+/**
+ * @brief Set the wifi icon object
+ * 设置wifi状态图标
+ */
+void set_wifi_icon(void){
+  unsigned long currentTime = millis();
+  if(currentTime - set_wifi_state_dealy > 300){
+    set_wifi_state_dealy = currentTime;
+    bool status = get_wifi_connect_state();
+    lv_label_set_text(icon, status ? WIFI_CONNECTED_ICON : WIFI_DISCONNECTED_ICON); 
+  }
 }
 
 

@@ -16,6 +16,6 @@ bool WiFi_connect(String data, bool status);
 
 void wifi_init(void);
 
-bool get_wifi_connect_status(void);
+bool get_wifi_connect_state(void);
 
 #endif

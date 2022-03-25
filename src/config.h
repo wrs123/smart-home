@@ -75,6 +75,14 @@ LV_FONT_DECLARE(iconfont_23);
     #define HC_SR505_PIN 4 //人体传感器引脚
 #endif //HC_SR505_PIN
 
+#ifndef WIFI_CONNECTED_ICON
+    #define WIFI_CONNECTED_ICON "\xEE\xA0\xBC" //wifi连接图标
+#endif //WIFI_CONNECTED_ICON
+
+#ifndef WIFI_DISCONNECTED_ICON
+    #define WIFI_DISCONNECTED_ICON "\xEE\xA1\x81" //wifi未连接图标
+#endif //WIFI_CONNECTED_ICON
+
 
 
 #endif //CONFIG_H

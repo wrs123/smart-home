@@ -53,7 +53,6 @@ String getNowTime(void){
     {
         Serial.println("Failed to obtain time");
     }else{
-        Serial.println(9/10);
         String hour = int2t(timeinfo.tm_hour);
         String min = int2t(timeinfo.tm_min);
         now_time = hour + ":" + min;

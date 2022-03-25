@@ -13,11 +13,15 @@
 
 #include <Arduino.h>
 #include "../components/main_info_component.h"
+#include "../utils/tools.h"
+#include "../utils/custom_wifi.h"
 
 void main_page(void);
 
 void update_time(void);
 
 void update_temp(void);
+
+void set_wifi_icon(void);
 
 #endif
