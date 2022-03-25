@@ -32,6 +32,15 @@ void initNetworkTime(void){
 }   
 
 /**
+ * @brief 
+ * 转换成时间格式数字  1 to 01
+ * @param t 
+ */
+String int2t(int t){
+    return t / 10 == 0 ? "0"+ String(t) : String(t);
+}
+
+/**
  * @brief Get the Now Time object
  *  获取当前时间
  * @return String 
@@ -44,7 +53,10 @@ String getNowTime(void){
     {
         Serial.println("Failed to obtain time");
     }else{
-        now_time = (String(timeinfo.tm_hour)+":"+String(timeinfo.tm_min));
+        Serial.println(9/10);
+        String hour = int2t(timeinfo.tm_hour);
+        String min = int2t(timeinfo.tm_min);
+        now_time = hour + ":" + min;
         Serial.println("当前时间:"+now_time); // 格式化输出
     }
     return now_time;

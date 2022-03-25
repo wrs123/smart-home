@@ -74,10 +74,10 @@ void main_page(void){
   // lv_img_set_zoom(icon, 160);
   static lv_style_t font_style1;
   lv_style_init(&font_style1);
-  lv_style_set_text_font(&font_style1, LV_STATE_DEFAULT, &lv_font_montserrat_20);
+  lv_style_set_text_font(&font_style1, LV_STATE_DEFAULT, &iconfont_23);
   lv_obj_add_style(icon, LV_LABEL_PART_MAIN, &font_style1);
   lv_style_set_text_color(&font_style1, LV_STATE_DEFAULT, LV_COLOR_WHITE);
-  lv_label_set_text(icon, LV_SYMBOL_WIFI);
+  lv_label_set_text(icon, "\xEE\xA1\x81");
   lv_obj_align(icon, status_bar, LV_ALIGN_IN_RIGHT_MID,-30,0);
 
 

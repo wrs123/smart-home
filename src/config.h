@@ -20,12 +20,14 @@
 #include "./assets/fonts/dgital_number_50.h"
 #include "./assets/fonts/dgital_number_25.h"
 #include "./assets/fonts/hmos_sanc_sc_regular_18.h"
+#include "./assets/fonts/iconfont_23.h"
 
 LV_FONT_DECLARE(zcool_kuhei_24);
 // LV_FONT_DECLARE(dgital_number_32);
 LV_FONT_DECLARE(dgital_number_50);
 LV_FONT_DECLARE(dgital_number_25);
 LV_FONT_DECLARE(hmos_sanc_sc_regular_18);
+LV_FONT_DECLARE(iconfont_23);
 
 #ifndef LOADING_ICON
     #define LOADING_ICON 
