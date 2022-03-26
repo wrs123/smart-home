@@ -163,7 +163,7 @@ void update_temp(void){
  * 更新湿度显示
  */
 void update_hum(void){
-    hum = String(get_hum_data(),1);
+    hum = String(get_hum_data(),0);
     Serial.println(hum);
     lv_label_set_text_fmt(hum_display, "%s", hum);
 }

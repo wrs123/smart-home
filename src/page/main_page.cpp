@@ -50,11 +50,17 @@ void main_page(void){
   mainInfoComponent(topContainer);
 
   //初始化状态栏容器
-  lv_obj_t * status_bar = lv_canvas_create(screen, NULL);
-  lv_obj_set_y(status_bar, -40);
-  static lv_color_t cbuf[LV_CANVAS_BUF_SIZE_INDEXED_1BIT(SCREEN_WIDTH, 80)];
-  lv_canvas_set_buffer(status_bar, cbuf, SCREEN_WIDTH, 50, LV_IMG_CF_INDEXED_1BIT);
-  lv_canvas_set_palette(status_bar, 1, LV_COLOR_TRANSP);
+  lv_obj_t * status_bar = lv_obj_create(screen, NULL);
+  lv_obj_set_y(status_bar, -50);
+  static lv_style_t status_bar_style;
+  lv_style_init(&status_bar_style);
+  lv_obj_set_size(status_bar, SCREEN_WIDTH, 50);
+  lv_style_set_border_width(&status_bar_style, LV_STATE_DEFAULT, 0);
+  lv_style_set_bg_opa(&status_bar_style, LV_STATE_DEFAULT, LV_OPA_TRANSP); 
+  lv_style_set_radius(&status_bar_style, LV_STATE_DEFAULT, 0);
+  lv_style_set_shadow_width(&status_bar_style, LV_STATE_DEFAULT, 0);
+  lv_obj_add_style(status_bar, LV_LABEL_PART_MAIN, &status_bar_style);
+  
 
   //时间显示
   static lv_style_t time_style;
@@ -74,10 +80,10 @@ void main_page(void){
   // lv_img_set_zoom(icon, 160);
   static lv_style_t font_style1;
   lv_style_init(&font_style1);
-  lv_style_set_text_font(&font_style1, LV_STATE_DEFAULT, &iconfont_23);
+  lv_style_set_text_font(&font_style1, LV_STATE_DEFAULT, &icons_23);
   lv_obj_add_style(icon, LV_LABEL_PART_MAIN, &font_style1);
   lv_style_set_text_color(&font_style1, LV_STATE_DEFAULT, LV_COLOR_WHITE);
-  lv_label_set_text(icon, "\xEE\xA1\x81");
+  lv_label_set_text(icon, WIFI_DISCONNECTED_ICON);
   lv_obj_align(icon, status_bar, LV_ALIGN_IN_RIGHT_MID,-30,0);
 
 
@@ -161,7 +167,7 @@ void main_page(void){
   lv_anim_path_init(&path);
   lv_anim_path_set_cb(&path, lv_anim_path_ease_out);
   lv_anim_set_path(&a, &path);
-  lv_anim_set_values(&a, -40, 0);
+  lv_anim_set_values(&a, -50, 0);
   lv_anim_start(&a); 
 
   lv_anim_t b;                 

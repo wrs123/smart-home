@@ -20,18 +20,43 @@
 #include "./assets/fonts/dgital_number_50.h"
 #include "./assets/fonts/dgital_number_25.h"
 #include "./assets/fonts/hmos_sanc_sc_regular_18.h"
-#include "./assets/fonts/iconfont_23.h"
+#include "./assets/fonts/icons_23.h"
 
 LV_FONT_DECLARE(zcool_kuhei_24);
 // LV_FONT_DECLARE(dgital_number_32);
 LV_FONT_DECLARE(dgital_number_50);
 LV_FONT_DECLARE(dgital_number_25);
 LV_FONT_DECLARE(hmos_sanc_sc_regular_18);
-LV_FONT_DECLARE(iconfont_23);
+LV_FONT_DECLARE(icons_23);
+
+/* =============icons define===========*/
+
+#ifndef WIFI_CONNECTED_ICON
+    #define WIFI_CONNECTED_ICON "\xEE\xA1\xB7" //wifi连接图标
+#endif //WIFI_CONNECTED_ICON
+
+#ifndef WIFI_DISCONNECTED_ICON
+    #define WIFI_DISCONNECTED_ICON "\xEE\xA1\xBA" //wifi未连接图标 
+#endif //WIFI_CONNECTED_ICON
+
+#ifndef CRICLE_CHECK_FULL_ICON
+    #define CRICLE_CHECK_FULL_ICON "\xEE\xA1\x9C" //circle check full
+#endif //CRICLE_CHECK_FULL_ICON
 
 #ifndef LOADING_ICON
-    #define LOADING_ICON 
-#endif //loading_icon
+    #define LOADING_ICON "\xEE\xA1\xA7" //loading_icon
+#endif //LOADING_ICON
+
+#ifndef X_CRICLE_ICON
+    #define X_CRICLE_ICON "\xEE\xA1\xB8" //x_cricle_icon
+#endif //X_CRICLE_ICON
+
+#ifndef CHECK_CRICLE_ICON
+    #define CHECK_CRICLE_ICON "\xEE\xA2\x82" //check_cricle_icon
+#endif //CHECK_CRICLE_ICON
+
+
+/*==========const var==========*/
 
 #ifndef AP_SSID
     #define AP_SSID "smart_home_ap"
@@ -51,6 +76,10 @@ LV_FONT_DECLARE(iconfont_23);
     #define SCREEN_HEIGHT TFT_HEIGHT
 #endif //SCREEN_HEIGHT
 
+
+
+
+/*============pin define============*/
 #ifndef DHTTYPE
     #define DHTTYPE DHT11
 #endif //DHTTYPE
@@ -74,15 +103,6 @@ LV_FONT_DECLARE(iconfont_23);
 #ifndef HC_SR505_PIN
     #define HC_SR505_PIN 4 //人体传感器引脚
 #endif //HC_SR505_PIN
-
-#ifndef WIFI_CONNECTED_ICON
-    #define WIFI_CONNECTED_ICON "\xEE\xA0\xBC" //wifi连接图标
-#endif //WIFI_CONNECTED_ICON
-
-#ifndef WIFI_DISCONNECTED_ICON
-    #define WIFI_DISCONNECTED_ICON "\xEE\xA1\x81" //wifi未连接图标
-#endif //WIFI_CONNECTED_ICON
-
 
 
 #endif //CONFIG_H
