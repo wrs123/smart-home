@@ -22,7 +22,6 @@
 /*==========custom include============= */
 #include "config.h"
 #include "assets/imgs/loading_icon.c"
-#include "assets/imgs/ap_QR_code.c"
 #include "assets/fonts/font_Hmos_sans_sc.h"
 #include "utils/custom_print.h"
 #include "utils/custom_wifi.h"
@@ -265,9 +264,9 @@ void taskOne(void *parameter)
 void setup() {
   //初始化控制台输出
   print_init(); 
+  // init_reset_pin();
   //初始化GUI配置
   gui_config_init();
-
   // pinMode(T0, INPUT_PULLUP);
   //线程一
   xTaskCreate(
@@ -320,6 +319,7 @@ void loop() {
     //   socketClientInit();
     //   delay(1500);
     // }
+    reset_pico();
     if((WiFi.status() == WL_CONNECTED) && !GUIInit && initStatus){
       removeLoading();
       main_page();
@@ -335,10 +335,9 @@ void loop() {
       update_main_info_data(); //更新温度
       // getNetworkTime();
       //hcsr505_get_value(open_buzzer);
-    }
-    //    
-    // Serial.printf("touch:%d\r\n", touchRead(T0));
-    //  if(touchRead(T0) < 40){  
+    } 
+    // Serial.printf("touch:%d\r\n", touchRead(2));
+    //  if(touchRead(T2) < 40){  
     //   NVSRemove();
     //  }
 }

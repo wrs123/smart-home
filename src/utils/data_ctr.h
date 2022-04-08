@@ -20,4 +20,6 @@ void NVSRemove(void);
 //获取NVS存储数据
 bool NVSGet(char *names[], int arr_len, bool (*Callback)(String, bool));
 
+int get_nvs_remove_status(void);
+
 #endif

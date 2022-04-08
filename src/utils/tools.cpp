@@ -12,7 +12,9 @@
 #include <Arduino.h>
 #include "time.h"
 
- static bool GET_TIME_STATUS = false;
+static bool GET_TIME_STATUS = false;
+static bool touch_status = false;
+static long reset_dealy = 0;
 
 /**
  * @brief 
@@ -68,3 +70,38 @@ String getNowTime(void){
         sprintf(str, "%f", d);
         return str;
     }
+
+
+// /**
+//  * @brief 
+//  * 初始化重置pin
+//  */
+// void init_reset_pin(void){
+//     pinMode(RESET_PIN, HIGH);
+// }
+
+/**
+ * @brief 
+ * 重启pico
+ */
+void reset_pico(void){
+    unsigned long currentTime = millis();
+    if(currentTime - reset_dealy > 300){
+        reset_dealy = currentTime;
+        int touchValue = touchRead(RESET_PIN);
+        Serial.print("触摸值为：");
+        Serial.println(touchValue);
+        if(!touch_status){
+            touch_status = true;
+            
+            if(touchValue < TOUCH_THRESHOLD){
+                //删除数据
+                void NVSRemove(void);
+                if(get_nvs_remove_status() == 2){
+                    touch_status = false;
+                    ESP.restart();
+                }
+            }
+        }
+    }
+}

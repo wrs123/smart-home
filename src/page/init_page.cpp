@@ -83,7 +83,7 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
  */
 void gui_config_init(void){
   //屏幕背光采用PWM调光
-  ledcSetup(10, 5000,12);
+  ledcSetup(10, 5000,10);
   ledcAttachPin(TFT_BL, 10);
   // analogReadResolution(10); 
   ledcWrite(10,1024);
@@ -125,7 +125,7 @@ void init_page(void){
   lv_obj_set_width(screen, SCREEN_WIDTH);
   lv_obj_set_height(screen, SCREEN_HEIGHT);
   lv_style_set_border_width(&screenStyle, LV_STATE_DEFAULT, 0);
-  lv_style_set_bg_color(&screenStyle, LV_STATE_DEFAULT, lv_color_hex(0x9dacc3));
+  lv_style_set_bg_color(&screenStyle, LV_STATE_DEFAULT, DEFAULT_BACKGROUND_COLOR);
   lv_obj_add_style(screen, LV_LABEL_PART_MAIN, &screenStyle);
 
   loadingContainer = lv_obj_create(screen, NULL);
@@ -215,20 +215,40 @@ void show_QR_code(void){
   lv_obj_set_height(QRCodeContainer, SCREEN_HEIGHT);
   lv_style_set_border_width(&containerStyle, LV_STATE_DEFAULT, 0);
   lv_style_set_opa_scale(&containerStyle, LV_STATE_DEFAULT, LV_OPA_0);
-  lv_style_set_bg_color(&containerStyle, LV_STATE_DEFAULT, lv_color_hex(0x808695)); 
+  lv_style_set_bg_color(&containerStyle, LV_STATE_DEFAULT, DEFAULT_BACKGROUND_COLOR); 
   lv_obj_add_style(QRCodeContainer, LV_LABEL_PART_MAIN, &containerStyle);
 
+  lv_obj_t * codeContainer = lv_obj_create(QRCodeContainer, NULL);
+  lv_obj_set_width(codeContainer, 170);
+  lv_obj_set_height(codeContainer, 170);
+  lv_obj_align(codeContainer, QRCodeContainer, LV_ALIGN_IN_TOP_MID, 0, (SCREEN_WIDTH-180)/2); 
+  static lv_style_t codeContainerStyle;
+  lv_style_init(&codeContainerStyle); 
+  lv_style_set_border_width(&codeContainerStyle, LV_STATE_DEFAULT, 0);
+  lv_style_set_bg_color(&codeContainerStyle, LV_STATE_DEFAULT, LV_COLOR_WHITE); 
+  lv_style_set_radius(&codeContainerStyle, LV_STATE_DEFAULT, 18);
+  lv_obj_add_style(codeContainer, LV_LABEL_PART_MAIN, &codeContainerStyle);
 
-  lv_obj_t * QR_code = lv_img_create(QRCodeContainer, NULL);
+  String ap_bssid = WiFi.softAPmacAddress();
+  String qr_data = "{\"ap_ssid\":\""+AP_SSIDD+"\",\"ap_password\":\""+AP_PASSWORDD+"\",\"ap_bssid\":\""+ap_bssid+"\"}";
 
-  lv_obj_set_width(QR_code, 180);
-  lv_obj_set_height(QR_code, 180);
-  LV_IMG_DECLARE(ap_QR_code);
-  // lv_img_set_zoom(QR_code, 270);
-  lv_obj_align(QR_code, loadingContainer, LV_ALIGN_CENTER, 0, 0);
-  lv_img_set_src(QR_code, &ap_QR_code);
-  // lv_img_set_antialias(QR_code, true);
+  lv_obj_t * QR_code = lv_qrcode_create(codeContainer, 150, LV_COLOR_BLACK, LV_COLOR_TRANSP);
+  lv_qrcode_update(QR_code, qr_data.c_str(), strlen(qr_data.c_str()));
+  lv_obj_align(QR_code, codeContainer, LV_ALIGN_CENTER, 0, 0);
+   
 
+  lv_obj_t * labels = lv_label_create(QRCodeContainer, NULL);
+  lv_label_set_text(labels, "请使用APP扫描");
+   static lv_style_t labels_style;
+	lv_style_init(&labels_style);
+  lv_style_set_text_font(&labels_style, LV_STATE_DEFAULT, &HarmonyOS_Sans_SC_Regular_24);
+  lv_style_set_text_color(&labels_style, LV_STATE_DEFAULT, lv_color_hex(0x0d171e));
+  lv_obj_add_style(labels, LV_LABEL_PART_MAIN, &labels_style);
+
+  lv_label_set_long_mode(labels, LV_LABEL_LONG_BREAK);
+  lv_obj_set_width(labels, SCREEN_WIDTH);
+  lv_obj_align(labels, QRCodeContainer, LV_ALIGN_IN_BOTTOM_MID, 0, -(SCREEN_WIDTH-180)/2);
+  lv_label_set_align(labels, LV_LABEL_ALIGN_CENTER);
 
   lv_anim_t anim;
   lv_anim_init(&anim);

@@ -11,6 +11,8 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 #include <Arduino.h>
+#include "../config.h"
+#include "data_ctr.h"
 
 
 #ifndef TIME_API_URL
@@ -22,6 +24,10 @@ void initNetworkTime(void);
 
 String getNowTime(void);
 
- char* dtostr(char *str, float d);
+char* dtostr(char *str, float d);
+
+void init_reset_pin(void);
+
+void reset_pico(void);
 
 #endif

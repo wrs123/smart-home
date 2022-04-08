@@ -15,7 +15,8 @@
 #include <ArduinoJson.h>
 
 
-Preferences prefs; //NVS操作对象
+static Preferences prefs; //NVS操作对象
+static int nvs_remove_status = 0; //0:未开始  1：进行中 2：结束 3：失败
 
 /**
  * @brief 
@@ -76,10 +77,24 @@ void NVSSet(String data, void (*Callback)(void)){
  * 删除NVS
  */
 void NVSRemove(){
-  Serial.println("开始删除数据");
-  prefs.begin("userData");
-  prefs.remove("wifi_ssid");
-  prefs.remove("wifi_password");
-  Serial.println("删除完成");
-  prefs.end();
+  if(nvs_remove_status == 0){
+    nvs_remove_status = 1;
+    Serial.println("开始删除数据");
+    prefs.begin("userData");
+    prefs.remove("wifi_ssid");
+    prefs.remove("wifi_password");
+    Serial.println("删除完成");
+    prefs.end();
+    nvs_remove_status = 2;
+  }
+}
+
+/**
+ * @brief Get the nvs remove status object
+ * 
+ * @return true 
+ * @return false 
+ */
+int get_nvs_remove_status(void){
+  return nvs_remove_status;
 }

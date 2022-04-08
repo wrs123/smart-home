@@ -10,7 +10,11 @@
  */
 #ifndef INIT_PAGE_H
 #define INIT_PAGE_H
+#define LV_LVGL_H_INCLUDE_SIMPLE
 #include <lvgl.h>
+#include "../lib/lv_lib_qrcode/lv_qrcode.h"
+
+#include "WiFi.h"
 
 
 void gui_config_init(void);
