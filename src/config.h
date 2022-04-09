@@ -82,7 +82,7 @@ static String AP_PASSWORDD = AP_PASSWORD;
 #endif //SCREEN_HEIGHT
 
 #ifndef TOUCH_THRESHOLD
-    #define TOUCH_THRESHOLD 40 //电容触摸阈值
+    #define TOUCH_THRESHOLD 10 //电容触摸阈值
 #endif //TOUCH_THRESHOLD
 
 #ifndef DEFAULT_BACKGROUND_COLOR

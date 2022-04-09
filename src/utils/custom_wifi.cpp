@@ -91,6 +91,8 @@ void Http_server(void){
         NVSSet("{\"wifi_ssid\":\""+wifi_ssid+"\",\"wifi_password\":\""+wifi_password+"\"}", main_callback);
         server.end(); //结束服务
         WiFi.disconnect(); //关闭ap热点
+        delay(300);
+        ESP.restart();
     } else {
         wifi_ssid = "No message sent";
     }

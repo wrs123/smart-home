@@ -91,12 +91,14 @@ void reset_pico(void){
         int touchValue = touchRead(RESET_PIN);
         Serial.print("触摸值为：");
         Serial.println(touchValue);
-        if(!touch_status){
-            touch_status = true;
+        if(touchValue < TOUCH_THRESHOLD ){
             
-            if(touchValue < TOUCH_THRESHOLD){
+            Serial.println("开始删除1");
+            if(!touch_status){
+                touch_status = true;
                 //删除数据
-                void NVSRemove(void);
+                Serial.println("开始删除2");
+                NVSRemove();
                 if(get_nvs_remove_status() == 2){
                     touch_status = false;
                     ESP.restart();
