@@ -28,6 +28,6 @@ char* dtostr(char *str, float d);
 
 void init_reset_pin(void);
 
-void reset_pico(void);
+int reset_pico(void);
 
 #endif

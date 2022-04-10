@@ -13,8 +13,9 @@
 #include "time.h"
 
 static bool GET_TIME_STATUS = false;
-static bool touch_status = false;
+static bool reset_status = false;
 static long reset_dealy = 0;
+static long reset_wait_time = 0;
 
 /**
  * @brief 
@@ -84,7 +85,7 @@ String getNowTime(void){
  * @brief 
  * 重启pico
  */
-void reset_pico(void){
+int reset_pico(void){
     unsigned long currentTime = millis();
     if(currentTime - reset_dealy > 300){
         reset_dealy = currentTime;
@@ -92,18 +93,25 @@ void reset_pico(void){
         Serial.print("触摸值为：");
         Serial.println(touchValue);
         if(touchValue < TOUCH_THRESHOLD ){
-            
-            Serial.println("开始删除1");
-            if(!touch_status){
-                touch_status = true;
-                //删除数据
-                Serial.println("开始删除2");
-                NVSRemove();
-                if(get_nvs_remove_status() == 2){
-                    touch_status = false;
-                    ESP.restart();
+            reset_wait_time += 301;
+            if(reset_wait_time > 5000){
+                Serial.println("超过5s");
+                reset_wait_time = 0;
+                if(!reset_status){
+                    reset_status = true;
+                    //删除数据
+                    Serial.println("开始删除2");
+                    NVSRemove();
+                    if(get_nvs_remove_status() == 2){
+                        reset_status = false;
+                        ESP.restart();
+                        return 0;
+                    } 
                 }
+                
             }
+            return 1;
         }
+        reset_wait_time = 0;
     }
 }
