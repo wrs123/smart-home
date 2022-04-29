@@ -22,6 +22,6 @@ void update_time(void);
 
 void update_temp(void);
 
-void set_wifi_icon(void);
+void set_icon_status(void);
 
 #endif

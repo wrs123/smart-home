@@ -266,4 +266,39 @@ void show_QR_code(void){
   // lv_obj_del(loadingContainer);
 }
 
+void start_set_network(void){
+  //清除screen子对象
+  lv_obj_clean(screen);
+
+
+  LV_IMG_DECLARE(device_icon);
+  LV_IMG_DECLARE(network_icon);
+
+  lv_obj_t * connectContainer = lv_obj_create(screen, NULL);
+  static lv_style_t containerStyle;
+  lv_style_init(&containerStyle);
+  lv_obj_set_width(connectContainer, SCREEN_WIDTH);
+  lv_obj_set_height(connectContainer, SCREEN_HEIGHT);
+  lv_style_set_border_width(&containerStyle, LV_STATE_DEFAULT, 0);
+  lv_style_set_opa_scale(&containerStyle, LV_STATE_DEFAULT, LV_OPA_COVER);
+  lv_style_set_bg_color(&containerStyle, LV_STATE_DEFAULT, DEFAULT_BACKGROUND_COLOR); 
+  lv_obj_add_style(connectContainer, LV_LABEL_PART_MAIN, &containerStyle);
+
+  //设备图标
+  lv_obj_t * deviceIcon = lv_img_create(connectContainer, NULL);
+  lv_obj_set_width(deviceIcon, 60);
+  lv_img_set_src(deviceIcon, &device_icon);
+  lv_obj_align(deviceIcon, connectContainer, LV_ALIGN_IN_TOP_LEFT, 30, 80);
+  // lv_img_set_antialias(deviceIcon, true);
+
+  //网络图标
+  lv_obj_t * networkIcon = lv_img_create(connectContainer, NULL);
+  lv_obj_set_width(networkIcon, 60);
+  lv_img_set_src(networkIcon, &network_icon);
+  lv_obj_align(networkIcon, connectContainer, LV_ALIGN_IN_TOP_RIGHT, -30, 80);
+  // lv_img_set_antialias(networkIcon, true);
+
+  
+}
+
 

@@ -12,7 +12,7 @@
 #include <string.h>
 
 #include <HTTPClient.h>
-#include <ArduinoWebsockets.h>
+
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
@@ -30,6 +30,7 @@
 #include "devices/hcsr505.h"
 #include "devices/buzzer.h"
 #include "utils/tools.h"
+#include "utils/network/custom_socket.h"
 
 /* page include */
 #include "page/init_page.h"
@@ -39,12 +40,8 @@
 
 
 // MQ135 mq135_sensor = MQ135(MQ135_PIN);
-String path = "/pico";
-const uint16_t websockets_server_port = 8091;
-const char* websockets_server_host = "192.168.1.101"; 
-bool connect_status = false;
-using namespace websockets;
-WebsocketsClient client;//Enter server adress
+
+
 bool connected = false;
 bool ledStatus = false;
 uint32_t delayMS;
@@ -96,136 +93,6 @@ void http_get(String url){
     http.end(); //Free the resources
 }
 
-//socket客户端初始化
-void socketClientInit(){
-  if(WiFi.status() == WL_CONNECTED){
-    connected = client.connect(websockets_server_host, websockets_server_port, path);
-    if(connected) {
-      connect_status  = true;
-        Serial.println("Connected!");
-    } else {
-      connect_status  = false;
-        Serial.println("Not Connected!");
-    }
-  }
-}
-
-//socket连接状态判断
-void socket_status_check(){
-  client.onEvent([](WebsocketsClient& client, WebsocketsEvent event, String payload){
-      switch (event)
-      {
-      case WebsocketsEvent::ConnectionClosed:  //连接被关闭
-        Serial.print("connect close");
-        connect_status  = false;
-        /* code */
-        break; 
-      case WebsocketsEvent::ConnectionOpened:  //连接成功
-        Serial.print("connect open");
-        connect_status  = true;
-        break;
-      default :
-        break;
-      }
-    });
-}
-
-
-/**
- * @brief 
- *  socket数据接收
- */
-void getMessage(void){
-  if(client.available()) {
-    client.onMessage([&](WebsocketsMessage message){
-      DynamicJsonDocument doc(1024);
-      String data = message.data();
-      deserializeJson(doc, data);
-      String type = doc["type"];
-      String message_type = doc["data"]["type"];
-
-      // switch (type)
-      // {
-      // case "normal":
-      //   /* code */
-      //   break;
-      // case "ctr":
-      //   /* code */
-      //   break;
-      // default:
-      //   break;
-      // }
-      bool led_power = doc["data"]["power"];
-      
-      if(!ledStatus){
-        led_open();
-      }else{
-        led_close();
-      }
-      ledStatus = led_power;
-      Serial.print("Got Message: ");
-      Serial.print(data);
-  });
-    client.poll();
-  }
-}
-
-//socket 数据发送
-// void sendTHData(void){  
-//   unsigned long currentTime=millis();
-//   if(currentTime - previousTime > 2000){
-//     previousTime=currentTime;
-//     String param = "{'from': '/pico', 'to': '/app', 'type':'normal', data: {}";
-//     String ouput_param;
-//     DynamicJsonDocument dataDoc(1024);
-//     deserializeJson(dataDoc, param);
-//     JsonObject obj = dataDoc.as<JsonObject>();
-
-//     sensors_event_t event;
-//     dht.temperature().getEvent(&event);
-
-//     if (isnan(event.temperature)) {
-//       Serial.println(F("Error reading temperature!"));
-//     }
-//     else {
-//       obj[String("data")][String("temp")] = event.temperature;
-//       // Serial.print(F("Temperature: "));
-//       // Serial.print(event.temperature);
-//       // Serial.println(F("°C"));
-//     }
-//     // Get humidity event and print its value.
-//     dht.humidity().getEvent(&event);
-//     if (isnan(event.relative_humidity)) {
-//       Serial.println(F("Error reading humidity!"));
-//     }
-//     else {
-//       obj[String("data")][String("hum")] = event.relative_humidity;
-//       // Serial.print(F("Humidity: "));
-//       // Serial.print(event.relative_humidity);
-//       // Serial.println(F("%"));
-//     }
-//     serializeJson(dataDoc, ouput_param); 
-
-//     // client.send(ouput_param);
-//     // float rzero = mq135_sensor.getRZero();
-//     // float correctedRZero = mq135_sensor.getCorrectedRZero(temperature, humidity);
-//     // float resistance = mq135_sensor.getResistance();
-//     // float ppm = mq135_sensor.getPPM();
-//     // float correctedPPM = mq135_sensor.getCorrectedPPM(temperature, humidity);
-
-//     // Serial.print("MQ135 RZero: ");
-//     // Serial.println(rzero);
-//     // Serial.print("\t Corrected RZero: ");
-//     // Serial.println(correctedRZero);
-//     // Serial.print("\t Resistance: ");
-//     // Serial.println(resistance);
-//     // Serial.print("\t PPM: ");
-//     // Serial.println(ppm);
-//     // Serial.print("\t Corrected PPM: ");
-//     // Serial.print(correctedPPM);
-//     // Serial.println("ppm");
-//     }
-// }
 
 
 void taskOne(void *parameter)
@@ -254,6 +121,8 @@ void taskOne(void *parameter)
   init_buzzer();
   //初始化温湿度传感器
   DHT11_init();
+  //初始化socket
+  socketClientInit();
   initStatus = true;
   Serial.println("关闭任务1");
   vTaskDelete(NULL);
@@ -264,6 +133,7 @@ void taskOne(void *parameter)
 void setup() {
   //初始化控制台输出
   print_init(); 
+  // touch_pad_set_voltage(TOUCH_HVOLT_2V4, TOUCH_LVOLT_0V7, TOUCH_HVOLT_ATTEN_1V5);
   // init_reset_pin();
   //初始化GUI配置
   gui_config_init();
@@ -279,12 +149,8 @@ void setup() {
   //初始化页面
   init_page();
   //  NVSRemove();
-  // //初始化socket
-  // socketClientInit();
   //初始化led
   // initLED();
-  // //初始化温湿度传感器
-  // DHT11_init();
   
   // digitalWrite(33, LOW);
 }
@@ -292,13 +158,6 @@ void setup() {
 
 //主循环
 void loop() {
-
-  // digitalWrite(33, HIGH);
-  // delay(500);
-  // digitalWrite(33, LOW);
-  // delay(500);
-  //当前连接状态判断 
-  // socket_status_check();
   // if(WiFi.status() == WL_CONNECTED && GUIInit && initStatus){
     // tftEndWrite();
   lv_task_handler(); /* let the GUI do its work */
@@ -327,13 +186,14 @@ void loop() {
     }
 
     if(GUIInit && initStatus){
-      set_wifi_icon();
+      set_icon_status();
     }
 
     if((WiFi.status() == WL_CONNECTED) && GUIInit && initStatus){
+      socket_loop_function();
       update_time(); //更新时间
       update_main_info_data(); //更新温度
-      // getNetworkTime();
+  
       //hcsr505_get_value(open_buzzer);
     } 
     // Serial.printf("touch:%d\r\n", touchRead(2));

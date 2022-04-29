@@ -154,7 +154,7 @@ void mainInfoComponent(lv_obj_t * parent){
  */
 void update_temp(void){
     temp = String(get_temp_data(),1);
-    Serial.println(temp);
+    // Serial.println(temp);
     lv_label_set_text_fmt(temp_display, "%s", temp);
 }
 
@@ -164,7 +164,7 @@ void update_temp(void){
  */
 void update_hum(void){
     hum = String(get_hum_data(),0);
-    Serial.println(hum);
+    // Serial.println(hum);
     lv_label_set_text_fmt(hum_display, "%s", hum);
 }
 

@@ -57,6 +57,7 @@
         "stdbool.h": "c",
         "preferences.h": "c",
         "regex": "cpp",
-        "harmonyos_sans_sc_regular_24.c": "cpp"
+        "harmonyos_sans_sc_regular_24.c": "cpp",
+        "device.c": "cpp"
     }
 }

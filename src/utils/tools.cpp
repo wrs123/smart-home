@@ -59,7 +59,7 @@ String getNowTime(void){
         String hour = int2t(timeinfo.tm_hour);
         String min = int2t(timeinfo.tm_min);
         now_time = hour + ":" + min;
-        Serial.println("当前时间:"+now_time); // 格式化输出
+        // Serial.println("当前时间:"+now_time); // 格式化输出
     }
     return now_time;
    
@@ -83,24 +83,24 @@ String getNowTime(void){
 
 /**
  * @brief 
- * 重启pico
+ * 重置pico
  */
 int reset_pico(void){
     unsigned long currentTime = millis();
     if(currentTime - reset_dealy > 300){
         reset_dealy = currentTime;
         int touchValue = touchRead(RESET_PIN);
-        Serial.print("触摸值为：");
-        Serial.println(touchValue);
+        // Serial.print("触摸值为：");
+        // Serial.println(touchValue);
         if(touchValue < TOUCH_THRESHOLD ){
             reset_wait_time += 301;
             if(reset_wait_time > 5000){
-                Serial.println("超过5s");
+                // Serial.println("超过5s");
                 reset_wait_time = 0;
                 if(!reset_status){
                     reset_status = true;
                     //删除数据
-                    Serial.println("开始删除2");
+                    // Serial.println("开始删除2");
                     NVSRemove();
                     if(get_nvs_remove_status() == 2){
                         reset_status = false;
@@ -115,3 +115,5 @@ int reset_pico(void){
         reset_wait_time = 0;
     }
 }
+
+ 

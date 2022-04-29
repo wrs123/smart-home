@@ -88,15 +88,23 @@ void Http_server(void){
         wifi_password = request->getParam("wifi_password", true)->value();
         Serial.println(wifi_ssid);
         Serial.println(wifi_password);
-        NVSSet("{\"wifi_ssid\":\""+wifi_ssid+"\",\"wifi_password\":\""+wifi_password+"\"}", main_callback);
-        server.end(); //结束服务
-        WiFi.disconnect(); //关闭ap热点
-        delay(300);
-        ESP.restart();
+        String wifi_data = "{\"wifi_ssid\":\""+wifi_ssid+"\",\"wifi_password\":\""+wifi_password+"\"}";
+        start_set_network();
+        WiFi_connect(wifi_data, true);
+        if(wifi_connect_status){
+          NVSSet(wifi_data, main_callback);
+          request->send(200, "multipart/form-data", "0");
+          server.end(); //结束服务
+          WiFi.disconnect(); //关闭ap热点
+          delay(300);
+          ESP.restart();
+        }
+        
     } else {
         wifi_ssid = "No message sent";
+        request->send(200, "multipart/form-data", "1");
     }
-    request->send(200, "multipart/form-data", "Hello, POST: " + wifi_ssid);
+    
   });
   server.onNotFound(notFound);
   server.begin();
@@ -126,10 +134,11 @@ bool WiFi_connect(String data, bool status){
     wifi_connect_status = true;
     return true;
   }
-  Ap_init();
-  Http_server();
-  removeLoading();
-  show_QR_code();
+    Ap_init();
+    Http_server();
+    removeLoading();
+    show_QR_code();
+  // start_set_network();
   // delay(300);
   return true;
 }

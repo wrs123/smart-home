@@ -11,16 +11,21 @@
 #include "main_page.h"
 #include "../config.h"
 #include "init_page.h"
+#include "../utils/network/custom_socket.h"
 
 #include <Arduino.h>
 #include <SPI.h>
 #include <TFT_eSPI.h>
 #include <lvgl.h>
 
+
 static lv_obj_t * time_label;
-static lv_obj_t * icon;
+static lv_obj_t * wifi_icon;
+static lv_obj_t * socket_icon;
 static long update_time_dealy=0;
 static long set_wifi_state_dealy = 0;
+static lv_style_t wifi_style;
+static lv_style_t socket_style;
 
 
 
@@ -72,19 +77,32 @@ void main_page(void){
   lv_label_set_text_fmt(time_label, "%s", "null");
   lv_obj_align(time_label, status_bar, LV_ALIGN_IN_LEFT_MID,30,0);
 
-  //wifi连接状态
-  icon = lv_label_create(status_bar, NULL);
+
+  //socket连接状态
+  socket_icon = lv_label_create(status_bar, NULL);
   // LV_IMG_DECLARE(wifi_icon);
   // lv_img_set_src(icon, &wifi_icon);
   // lv_img_set_antialias(icon, true);
   // lv_img_set_zoom(icon, 160);
-  static lv_style_t font_style1;
-  lv_style_init(&font_style1);
-  lv_style_set_text_font(&font_style1, LV_STATE_DEFAULT, &icons_23);
-  lv_obj_add_style(icon, LV_LABEL_PART_MAIN, &font_style1);
-  lv_style_set_text_color(&font_style1, LV_STATE_DEFAULT, LV_COLOR_WHITE);
-  lv_label_set_text(icon, WIFI_DISCONNECTED_ICON);
-  lv_obj_align(icon, status_bar, LV_ALIGN_IN_RIGHT_MID,-30,0);
+  lv_style_init(&socket_style);
+  // lv_style_set_text_font(&font_style1, LV_STATE_DEFAULT, &icons_23);
+  lv_obj_add_style(socket_icon, LV_LABEL_PART_MAIN, &socket_style);
+  lv_style_set_text_color(&socket_style, LV_STATE_DEFAULT, lv_color_hex(0xbebebe));
+  lv_label_set_text(socket_icon, LV_SYMBOL_UPLOAD);
+  lv_obj_align(socket_icon, status_bar, LV_ALIGN_IN_RIGHT_MID,-65,0);
+
+  //wifi连接状态
+  wifi_icon = lv_label_create(status_bar, NULL);
+  // LV_IMG_DECLARE(wifi_icon);
+  // lv_img_set_src(icon, &wifi_icon);
+  // lv_img_set_antialias(icon, true);
+  // lv_img_set_zoom(icon, 160);
+  lv_style_init(&wifi_style);
+  // lv_style_set_text_font(&font_style1, LV_STATE_DEFAULT, &icons_23);
+  lv_obj_add_style(wifi_icon, LV_LABEL_PART_MAIN, &wifi_style);
+  lv_style_set_text_color(&wifi_style, LV_STATE_DEFAULT, lv_color_hex(0xbebebe));
+  lv_label_set_text(wifi_icon, LV_SYMBOL_WIFI);
+  lv_obj_align(wifi_icon, status_bar, LV_ALIGN_IN_RIGHT_MID,-30,0);
 
 
   //按钮1
@@ -242,16 +260,25 @@ void update_time(void){
 
 /**
  * @brief Set the wifi icon object
- * 设置wifi状态图标
+ * 设置状态图标
  */
-void set_wifi_icon(void){
+void set_icon_status(void){
   unsigned long currentTime = millis();
-  if(currentTime - set_wifi_state_dealy > 300){
+  if(currentTime - set_wifi_state_dealy > 500){
+    Serial.println("更新图标");
     set_wifi_state_dealy = currentTime;
-    bool status = get_wifi_connect_state();
-    lv_label_set_text(icon, status ? WIFI_CONNECTED_ICON : WIFI_DISCONNECTED_ICON); 
+    //wifi图标
+    bool wifi_status = get_wifi_connect_state();
+    lv_style_set_text_color(&wifi_style, LV_STATE_DEFAULT, wifi_status ? LV_COLOR_WHITE : lv_color_hex(0xbebebe));
+    //socket图标
+    bool socket_status = get_socket_connect_status();
+    Serial.println(socket_status);
+    lv_style_set_text_color(&socket_style, LV_STATE_DEFAULT, socket_status ? LV_COLOR_WHITE : lv_color_hex(0xbebebe));
+    lv_obj_add_style(socket_icon, LV_LABEL_PART_MAIN, &socket_style);
   }
 }
+
+
 
 
 
