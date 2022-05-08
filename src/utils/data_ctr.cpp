@@ -63,9 +63,11 @@ void NVSSet(String data, void (*Callback)(void)){
   deserializeJson(doc, data);
   Serial.println((const char*)doc["wifi_ssid"]);
   Serial.println((const char*)doc["wifi_password"]);
+  Serial.println((const char*)doc["key"]);
   prefs.begin("userData");
   prefs.putString("wifi_ssid", (const char*)doc["wifi_ssid"]);
   prefs.putString("wifi_password", (const char*)doc["wifi_password"]);
+  prefs.putString("key", (const char*)doc["key"]);
   Serial.println("存储完成");
   prefs.end();
   Callback();

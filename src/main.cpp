@@ -37,11 +37,6 @@
 #include "page/main_page.h"
 
 
-
-
-// MQ135 mq135_sensor = MQ135(MQ135_PIN);
-
-
 bool connected = false;
 bool ledStatus = false;
 uint32_t delayMS;
@@ -52,11 +47,6 @@ float humidity = 25.0;
 bool GUIInit = false;
 bool initStatus = false;
 
-
-
-void dosth(void){
-  Serial.println("动画完成");
-}
 
 
 //初始化LED

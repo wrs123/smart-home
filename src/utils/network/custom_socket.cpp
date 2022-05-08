@@ -12,6 +12,31 @@ ConnectStatus SOCKET_STATUS = ConnectStatus::UNCONNECT;
 using namespace websockets;
 WebsocketsClient client;
 static long wait_dealy=0;
+String key = "";
+
+
+bool keyInitCallback(String data, bool status){
+  if(status){
+      DynamicJsonDocument doc(128);
+      deserializeJson(doc, data);
+      String network_key = doc["key"]; 
+      key = network_key;
+      Serial.println(network_key);
+      return true;
+    }
+    return false;
+}
+
+/**
+ * @brief 
+ * 获取本地存储key
+ * @return String 
+ */
+void key_init(void){
+  char *key[] = {"key"};
+
+  NVSGet(key, 1, keyInitCallback);
+}
 
 
 /**
@@ -20,9 +45,13 @@ static long wait_dealy=0;
  */
 void socketClientInit(void){
   if(WiFi.status() == WL_CONNECTED){
+    key_init();
     Serial.println("连接socket状态");
     SOCKET_STATUS = ConnectStatus::CONNECTING;
-    bool connected = client.connect(WEBSOCKET_SERVER_HOST, WEBSOCKET_SERVER_POST, WEBSOCKET_SERVER_PATH);
+    String server_path = WEBSOCKET_SERVER_PATH;
+    String path = server_path+"?"+key;
+    Serial.println(path);
+    bool connected = client.connect(WEBSOCKET_SERVER_HOST, WEBSOCKET_SERVER_POST, path);
     if(connected) {
       SOCKET_STATUS = ConnectStatus::CONNECTED;
         Serial.println("socket连接成功");

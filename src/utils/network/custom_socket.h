@@ -6,6 +6,7 @@
 #include "../../config.h"
 #include <ArduinoJson.h>
 #include "../../devices/dht11.h"
+#include "../data_ctr.h"
 
 void socketClientInit(void);
 void socket_status_check(void);

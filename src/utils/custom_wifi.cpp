@@ -82,13 +82,15 @@ void Http_server(void){
   
   
   server.on("/post", HTTP_POST, [](AsyncWebServerRequest *request){
-    String wifi_ssid="",wifi_password="";
+    String wifi_ssid="",wifi_password="",key="";
     if (request->hasParam("wifi_ssid", true) && request->hasParam("wifi_password", true)) {
         wifi_ssid = request->getParam("wifi_ssid", true)->value();
         wifi_password = request->getParam("wifi_password", true)->value();
-        Serial.println(wifi_ssid);
-        Serial.println(wifi_password);
-        String wifi_data = "{\"wifi_ssid\":\""+wifi_ssid+"\",\"wifi_password\":\""+wifi_password+"\"}";
+        key = request->getParam("key", true)->value();
+        Serial.println("wifi_ssid: ${wifi_ssid}");
+        Serial.println("wifi_password: ${wifi_password}");
+        Serial.println(key);
+        String wifi_data = "{\"wifi_ssid\":\""+wifi_ssid+"\",\"wifi_password\":\""+wifi_password+"\",\"key\":\""+key+"\"}";
         start_set_network();
         WiFi_connect(wifi_data, true);
         if(wifi_connect_status){
@@ -96,7 +98,7 @@ void Http_server(void){
           request->send(200, "multipart/form-data", "0");
           server.end(); //结束服务
           WiFi.disconnect(); //关闭ap热点
-          delay(300);
+          delay(500);
           ESP.restart();
         }
         
@@ -124,7 +126,8 @@ bool WiFi_connect(String data, bool status){
     DynamicJsonDocument doc(512);
     deserializeJson(doc, data);
     String ssid = doc["wifi_ssid"]; 
-    String password =doc["wifi_password"] ;
+    String password = doc["wifi_password"];
+
     WiFi.begin(ssid.c_str(), password.c_str()); 
     while(WiFi.status() != WL_CONNECTED){
       delay(300);
