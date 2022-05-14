@@ -36,7 +36,7 @@ void led_switch_component(lv_obj_t * parent){
     lv_obj_set_scrollbar_mode(led_switch, LV_SCROLLBAR_MODE_OFF);
     lv_obj_set_layout(led_switch, LV_LAYOUT_FLEX);
     lv_obj_set_flex_flow(led_switch, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_flex_align(led_switch, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_flex_align(led_switch, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
 
     lv_obj_set_size(led_switch, SCREEN_HEIGHT-300, SCREEN_WIDTH-65);
     lv_obj_set_style_bg_color(led_switch,lv_color_make(25,190,107) ,LV_STATE_DEFAULT);
@@ -51,6 +51,16 @@ void led_switch_component(lv_obj_t * parent){
     lv_img_set_src(icon, &led_icon);
     // lv_img_set_zoom(icon, 60);
 
+    lv_obj_t * time_label = lv_label_create(led_switch);
+    lv_obj_set_style_text_font(time_label, &lv_font_montserrat_24, LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(time_label, lv_color_make(255,255,255), LV_STATE_DEFAULT);
+    lv_label_set_text_fmt(time_label, "%s", "80%");
+   
+
+    lv_obj_t * name_label = lv_label_create(led_switch);
+    lv_obj_set_style_text_font(name_label, &lv_font_montserrat_20, LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(name_label, lv_color_make(255,255,255), LV_STATE_DEFAULT);
+    lv_label_set_text(name_label, "LED");
     
     
 }
