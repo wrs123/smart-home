@@ -69,8 +69,8 @@ void notFound(AsyncWebServerRequest *request) {
 }
 
 void main_callback(){
-  removeLoading();
-  main_page();
+  // removeLoading();
+  // main_page();
 }
 
 /**
@@ -87,8 +87,10 @@ void Http_server(void){
         wifi_ssid = request->getParam("wifi_ssid", true)->value();
         wifi_password = request->getParam("wifi_password", true)->value();
         key = request->getParam("key", true)->value();
-        Serial.println("wifi_ssid: ${wifi_ssid}");
-        Serial.println("wifi_password: ${wifi_password}");
+        Serial.print("wifi_ssid:");
+        Serial.println(wifi_ssid);
+        Serial.print("wifi_password:");
+        Serial.println(wifi_password);
         Serial.println(key);
         String wifi_data = "{\"wifi_ssid\":\""+wifi_ssid+"\",\"wifi_password\":\""+wifi_password+"\",\"key\":\""+key+"\"}";
         start_set_network();
@@ -137,15 +139,16 @@ bool WiFi_connect(String data, bool status){
     wifi_connect_status = true;
     return true;
   }
-    Ap_init();
-    Http_server();
-    removeLoading();
-    show_QR_code();
+    // show_QR_code();
   // start_set_network();
   // delay(300);
   return true;
 }
 
+void start_net_config_server(void){
+  Ap_init();
+  Http_server();
+}
 
 
 

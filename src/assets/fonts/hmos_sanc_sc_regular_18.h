@@ -92,8 +92,8 @@ static const lv_font_fmt_txt_cmap_t hmos_sanc_sc_regular_18_cmaps[] =
 
 #if LV_VERSION_CHECK(8, 0, 0)
 /*Store all the custom data of the font*/
-static  lv_font_fmt_txt_glyph_cache_t cache;
-static const lv_font_fmt_txt_dsc_t font_dsc = {
+static  lv_font_fmt_txt_glyph_cache_t hmos_sanc_sc_regular_18_cache;
+static const lv_font_fmt_txt_dsc_t hmos_sanc_sc_regular_18_font_dsc = {
 #else
 static lv_font_fmt_txt_dsc_t hmos_sanc_sc_regular_18_font_dsc = {
 #endif
@@ -107,7 +107,7 @@ static lv_font_fmt_txt_dsc_t hmos_sanc_sc_regular_18_font_dsc = {
     .kern_classes = 0,
     .bitmap_format = 0,
 #if LV_VERSION_CHECK(8, 0, 0)
-    .cache = &cache
+    .cache = &hmos_sanc_sc_regular_18_cache
 #endif
 };
 

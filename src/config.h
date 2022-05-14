@@ -11,9 +11,11 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <SPI.h>
+#include <Arduino.h>
+
+// #include <SPI.h>
 #include <TFT_eSPI.h>
-#include <lvgl.h>
+// #include <lvgl.h>
 
 
 #include "./assets/fonts/zcool_kuhei_24.h"
@@ -73,7 +75,7 @@ static String AP_SSIDD = AP_SSID;
 static String AP_PASSWORDD = AP_PASSWORD;
 
 #ifndef WEBSOCKET_SERVER_HOST
-    #define WEBSOCKET_SERVER_HOST "192.168.1.100"
+    #define WEBSOCKET_SERVER_HOST "192.168.1.103"
 #endif //WEBSOCKET_SERVER_HOST
 
 #ifndef WEBSOCKET_SERVER_POST
@@ -98,8 +100,12 @@ static String AP_PASSWORDD = AP_PASSWORD;
 #endif //TOUCH_THRESHOLD
 
 #ifndef DEFAULT_BACKGROUND_COLOR
-    #define DEFAULT_BACKGROUND_COLOR lv_color_hex(0x9399a9)
-#endif //DEFAULT_BACKGROUND_COLOR
+    #define DEFAULT_BACKGROUND_COLOR lv_color_make(238,240,245)
+#endif //DEFAULT_BACKGROUND_COLOR  
+
+#ifndef DEFAULT_TITLE_COLOR
+    #define DEFAULT_TITLE_COLOR lv_color_make(23,35,61)
+#endif //DEFAULT_TITLE_COLOR
 
 
 

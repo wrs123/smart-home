@@ -15,13 +15,16 @@
 #include "../components/main_info_component.h"
 #include "../utils/tools.h"
 #include "../utils/custom_wifi.h"
+#include "../assets/imgs/led_icon.c"
 
-void main_page(void);
+void init_main_page(void);
 
 void update_time(void);
 
 void update_temp(void);
 
 void set_icon_status(void);
+
+void load_main_page();
 
 #endif

@@ -58,6 +58,9 @@
         "preferences.h": "c",
         "regex": "cpp",
         "harmonyos_sans_sc_regular_24.c": "cpp",
-        "device.c": "cpp"
+        "device.c": "cpp",
+        "lv_qrcode.h": "c",
+        "device_icon.c": "cpp",
+        "led_icon.c": "cpp"
     }
 }

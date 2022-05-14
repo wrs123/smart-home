@@ -18,4 +18,6 @@ void wifi_init(void);
 
 bool get_wifi_connect_state(void);
 
+void start_net_config_server(void);
+
 #endif

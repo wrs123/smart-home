@@ -2,13 +2,13 @@
 #include <ArduinoWebsockets.h>
 
 
-enum class ConnectStatus{
+enum class SocketConnectStatus{
     CONNECTED,
     UNCONNECT,
     CONNECTING,
     CONNECTERR
 };
-ConnectStatus SOCKET_STATUS = ConnectStatus::UNCONNECT;
+SocketConnectStatus SOCKET_STATUS = SocketConnectStatus::UNCONNECT;
 using namespace websockets;
 WebsocketsClient client;
 static long wait_dealy=0;
@@ -47,16 +47,16 @@ void socketClientInit(void){
   if(WiFi.status() == WL_CONNECTED){
     key_init();
     Serial.println("连接socket状态");
-    SOCKET_STATUS = ConnectStatus::CONNECTING;
+    SOCKET_STATUS = SocketConnectStatus::CONNECTING;
     String server_path = WEBSOCKET_SERVER_PATH;
     String path = server_path+"?"+key;
     Serial.println(path);
     bool connected = client.connect(WEBSOCKET_SERVER_HOST, WEBSOCKET_SERVER_POST, path);
     if(connected) {
-      SOCKET_STATUS = ConnectStatus::CONNECTED;
+      SOCKET_STATUS = SocketConnectStatus::CONNECTED;
         Serial.println("socket连接成功");
     } else {
-      SOCKET_STATUS = ConnectStatus::UNCONNECT;
+      SOCKET_STATUS = SocketConnectStatus::UNCONNECT;
         Serial.println("socket连接失败");
     }
   }
@@ -74,12 +74,12 @@ void socket_status_check(void){
       switch (event){
         case WebsocketsEvent::ConnectionClosed:  //连接被关闭
           Serial.print("connect close");
-          SOCKET_STATUS = ConnectStatus::UNCONNECT;
+          SOCKET_STATUS = SocketConnectStatus::UNCONNECT;
           /* code */
           break; 
         case WebsocketsEvent::ConnectionOpened:  //连接成功
           Serial.print("connect open");
-          SOCKET_STATUS = ConnectStatus::CONNECTED;
+          SOCKET_STATUS = SocketConnectStatus::CONNECTED;
           break;
         default :
           Serial.print("connect 11");
@@ -134,7 +134,7 @@ void getMessage(void){
  * 获取socket连接状态
  */
 bool get_socket_connect_status(void){
-  return SOCKET_STATUS == ConnectStatus::CONNECTED;
+  return SOCKET_STATUS == SocketConnectStatus::CONNECTED;
 }
 
 /**
@@ -166,7 +166,7 @@ void socket_loop_function(void){
     if(currentTime - wait_dealy > 500){
       wait_dealy = currentTime;
       socket_status_check(); //检查socket连接状态
-      if(SOCKET_STATUS != ConnectStatus::CONNECTING && SOCKET_STATUS != ConnectStatus::CONNECTED){
+      if(SOCKET_STATUS != SocketConnectStatus::CONNECTING && SOCKET_STATUS != SocketConnectStatus::CONNECTED){
         socketClientInit(); //连接socket
         return ;
       }

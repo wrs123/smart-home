@@ -12,21 +12,23 @@
 #define INIT_PAGE_H
 #define LV_LVGL_H_INCLUDE_SIMPLE
 #include <lvgl.h>
+#include <Arduino.h>
+// #include <SPI.h>
+#include <TFT_eSPI.h>
 #include "../lib/lv_lib_qrcode/lv_qrcode.h"
 
 #include "../assets/imgs/device_icon.c"
 #include "../assets/imgs/network_icon.c"
 
-#include "WiFi.h"
 
 
-void gui_config_init(void);
 void init_page(void);
-void removeLoading(void);
-void show_QR_code(void);
-void del_loadingContainer(void);
-void tftEndWrite();
-lv_obj_t * getScreen(void);
+void load_qr_code_page();
+void show_QR_code();
+// void removeLoading(void);
+// void show_QR_code(void);
+// void tftEndWrite();
+// lv_obj_t * getScreen(void);
 void start_set_network(void);
 
 #endif

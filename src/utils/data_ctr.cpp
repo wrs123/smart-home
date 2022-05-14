@@ -18,37 +18,52 @@
 static Preferences prefs; //NVS操作对象
 static int nvs_remove_status = 0; //0:未开始  1：进行中 2：结束 3：失败
 
+NVSGetWifiInfoState NVSWIFI_STATE = NVSGetWifiInfoState::STANDBY;
+
+NVSGetWifiInfoState get_nvswifi_state(void){
+  return NVSWIFI_STATE;
+}
+
+void set_nvswifi_state_standby(void){
+  NVSWIFI_STATE = NVSGetWifiInfoState::STANDBY;
+}
+
 /**
  * @brief 
  * 获取NVS数据
  */
 bool NVSGet(char *names[], int arr_len, bool (*Callback)(String, bool)){
-  Serial.println("开始访问NVS...");
-  prefs.begin("userData");
-  Serial.print("NVS剩余空间为:");
-  Serial.println(prefs.freeEntries());//查询剩余空间
+  if(NVSWIFI_STATE != NVSGetWifiInfoState::GETTING){
+    NVSWIFI_STATE = NVSGetWifiInfoState::GETTING;
+    Serial.println("开始访问NVS...");
+    prefs.begin("userData");
+    Serial.print("NVS剩余空间为:");
+    Serial.println(prefs.freeEntries());//查询剩余空间
 
-  StaticJsonDocument<200> doc;
-  String result = "";
+    StaticJsonDocument<200> doc;
+    String result = "";
 
-  if(!prefs.isKey(names[0])){
-    Serial.printf("无存储信息信息!\n");
-    Callback(result, false);
+    if(!prefs.isKey(names[0])){
+      Serial.printf("无存储信息信息!\n");
+      NVSWIFI_STATE = NVSGetWifiInfoState::NONE;
+      Callback(result, false);
+      prefs.end();
+      return false;
+    }
+    for(int i=0; i<arr_len;i++){
+      Serial.print(String(names[i])+":");//查询剩余空间
+      Serial.println(prefs.getString(names[i]).c_str());
+      doc[names[i]] = prefs.getString(names[i]);
+    }
+    serializeJson(doc, result);
+    // Serial.println(result);
+    NVSWIFI_STATE = NVSGetWifiInfoState::GOTTON;
+    Callback(result, true);
+    //结束NVS访问
     prefs.end();
     return false;
   }
-  for(int i=0; i<arr_len;i++){
-    Serial.print(String(names[i])+":");//查询剩余空间
-    Serial.println(prefs.getString(names[i]).c_str());
-    doc[names[i]] = prefs.getString(names[i]);
-  }
-  serializeJson(doc, result);
-  // Serial.println(result);
   
-  Callback(result, true);
-  //结束NVS访问
-  prefs.end();
-  return false;
 } 
 
 

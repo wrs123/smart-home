@@ -49,7 +49,7 @@ lv_obj_t * lv_qrcode_create(lv_obj_t * parent, lv_coord_t size, lv_color_t dark_
 //    LV_ASSERT_MALLOC(buf);
    if(buf == NULL) return NULL;
 
-   lv_obj_t * canvas = lv_canvas_create(parent, NULL);
+   lv_obj_t * canvas = lv_canvas_create(parent);
    if(canvas == NULL) return NULL;
 
    lv_canvas_set_buffer(canvas, buf, size, size, LV_IMG_CF_INDEXED_1BIT);

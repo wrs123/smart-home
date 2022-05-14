@@ -423,8 +423,8 @@ static const lv_font_fmt_txt_kern_pair_t kern_pairs =
 
 #if LV_VERSION_CHECK(8, 0, 0)
 /*Store all the custom data of the font*/
-static  lv_font_fmt_txt_glyph_cache_t cache;
-static const lv_font_fmt_txt_dsc_t font_dsc = {
+static  lv_font_fmt_txt_glyph_cache_t HM_24_cache;
+static const lv_font_fmt_txt_dsc_t HM_24_font_dsc = {
 #else
 static lv_font_fmt_txt_dsc_t hos_font_dsc = {
 #endif
@@ -438,7 +438,7 @@ static lv_font_fmt_txt_dsc_t hos_font_dsc = {
     .kern_classes = 0,
     .bitmap_format = 0,
 #if LV_VERSION_CHECK(8, 0, 0)
-    .cache = &cache
+    .cache = &HM_24_cache
 #endif
 };
 
@@ -464,7 +464,7 @@ static lv_font_t HarmonyOS_Sans_SC_Regular_24 = {
     .underline_position = -2,
     .underline_thickness = 1,
 #endif
-    .dsc = &hos_font_dsc           /*The custom font data. Will be accessed by `get_glyph_bitmap/dsc` */
+    .dsc = &HM_24_font_dsc           /*The custom font data. Will be accessed by `get_glyph_bitmap/dsc` */
 };
 
 
