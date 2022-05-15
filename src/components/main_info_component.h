@@ -15,6 +15,9 @@
 #include "../config.h"
 #include "../devices/dht11.h"
 #include "../utils/tools.h"
+#include "../assets/imgs/temperature_icon.c"  
+#include "../assets/imgs/humidity_icon.c"
+#include "../assets/imgs/air_icon.c"
 
 
 void mainInfoComponent(lv_obj_t * parent);

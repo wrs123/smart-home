@@ -14,10 +14,11 @@
 static lv_obj_t * main_info_container;
 static lv_obj_t * temp_container; 
 static lv_obj_t * temp_display; //温度控件
-static lv_obj_t * hum_display; //湿度控件
+static  lv_obj_t * hum_display; //湿度控件
+static  lv_obj_t * air_display; //空气质量控件
 
 
-String temp = "0.0";
+String temp = "23.6";
 String hum = "0.0";
 
 static long update_info_dealy=0;
@@ -31,39 +32,46 @@ static long update_info_dealy=0;
 void tempContainer(lv_obj_t * parent){
     //温度显示容器
     temp_container = lv_obj_create(parent);
+    lv_obj_set_scrollbar_mode(temp_container, LV_SCROLLBAR_MODE_OFF);
     lv_obj_set_layout(temp_container, LV_LAYOUT_FLEX);
-    lv_obj_set_flex_flow(temp_container, LV_FLEX_FLOW_ROW);
-    lv_obj_set_flex_align(temp_container, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_END, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_flex_flow(temp_container, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_align(temp_container, LV_FLEX_ALIGN_SPACE_BETWEEN, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_SPACE_BETWEEN);
+
     
-    lv_obj_set_height(temp_container, 50);
-    lv_obj_set_y(temp_container, 0);
-    lv_obj_set_width(temp_container, (SCREEN_HEIGHT-20));
+    lv_obj_set_size(temp_container,(255/3)-17 ,SCREEN_WIDTH-65);
     lv_obj_set_style_border_width(temp_container, 0, LV_STATE_DEFAULT);
     lv_obj_set_style_radius(temp_container, 0, LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(temp_container, 0, LV_STATE_DEFAULT);
-
-    lv_obj_t * tempDisplayTitle = lv_label_create(temp_container);
-    lv_label_set_text(tempDisplayTitle, "温度");
-    // lv_obj_align(tempDisplayTitle, LV_ALIGN_TOP_LEFT, 0,0);
- 
-    lv_obj_set_style_text_font(tempDisplayTitle, &hmos_sanc_sc_regular_18, LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(tempDisplayTitle, DEFAULT_TITLE_COLOR, LV_STATE_DEFAULT);
 
 
     //温度显示
     temp_display = lv_label_create(temp_container);
     lv_label_set_text_fmt(temp_display, "%s", temp);
-    // lv_obj_align(temp_display, LV_ALIGN_TOP_LEFT, 45, 0);
-   
-    lv_obj_set_style_text_font(temp_display, &dgital_number_50, LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(temp_display, DEFAULT_TITLE_COLOR, LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(temp_display, &hmos_sanc_sc_regular_number_23, LV_STATE_DEFAULT);
 
-    lv_obj_t * tempDisplaySign = lv_label_create(temp_container);
-    lv_label_set_text(tempDisplaySign, "°C");
-    // lv_obj_align(tempDisplaySign, LV_ALIGN_TOP_LEFT, 130,4);
+
+
+    //温度图标
+    lv_obj_t * icon = lv_img_create(temp_container);
+    lv_img_set_src(icon, &temperature_icon);
+
+    
+
+    lv_obj_t * tempDisplayTitle = lv_label_create(temp_container);
+    lv_label_set_text(tempDisplayTitle, "温度");
+    lv_obj_set_style_text_font(tempDisplayTitle, &hmos_sanc_sc_regular_16, LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(tempDisplayTitle, DEFAULT_TITLE_COLOR, LV_STATE_DEFAULT);
+
+
+     
+    // lv_obj_set_style_text_font(temp_display, &dgital_number_50, LV_STATE_DEFAULT);
+    // lv_obj_set_style_text_color(temp_display, DEFAULT_TITLE_COLOR, LV_STATE_DEFAULT);
+
+    // lv_obj_t * tempDisplaySign = lv_label_create(temp_container);
+    // lv_label_set_text(tempDisplaySign, "°C");
+    // // lv_obj_align(tempDisplaySign, LV_ALIGN_TOP_LEFT, 130,4);
   
-    lv_obj_set_style_text_font(tempDisplaySign, &dgital_number_25, LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(tempDisplaySign, DEFAULT_TITLE_COLOR, LV_STATE_DEFAULT);
+    // lv_obj_set_style_text_font(tempDisplaySign, &dgital_number_25, LV_STATE_DEFAULT);
+    // lv_obj_set_style_text_color(tempDisplaySign, DEFAULT_TITLE_COLOR, LV_STATE_DEFAULT);
 
 }
 
@@ -73,42 +81,71 @@ void tempContainer(lv_obj_t * parent){
  * 湿度显示
  */
 void humContainer(lv_obj_t * parent){
-
-    //湿度显示容器
+     //湿度显示容器
     lv_obj_t * hum_container = lv_obj_create(parent);
- 
-    lv_obj_set_y(hum_container, 60);
-    lv_obj_set_width(hum_container, (SCREEN_HEIGHT-20));
-    lv_obj_set_flex_flow(hum_container, LV_FLEX_FLOW_ROW);
-    lv_obj_set_flex_align(hum_container, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_END, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_scrollbar_mode(hum_container, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_layout(hum_container, LV_LAYOUT_FLEX);
+    lv_obj_set_flex_flow(hum_container, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_align(hum_container, LV_FLEX_ALIGN_SPACE_BETWEEN, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_SPACE_BETWEEN);
 
+    
+    lv_obj_set_size(hum_container,(255/3)-17 ,SCREEN_WIDTH-65);
     lv_obj_set_style_border_width(hum_container, 0, LV_STATE_DEFAULT);
     lv_obj_set_style_radius(hum_container, 0, LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(hum_container, 0, LV_STATE_DEFAULT);
-    lv_obj_set_height(hum_container, 50);
 
-
-    lv_obj_t * humDisplayTitle = lv_label_create(hum_container);
-    lv_label_set_text(humDisplayTitle, "湿度");
-
-    lv_obj_set_style_text_font(humDisplayTitle, &hmos_sanc_sc_regular_18, LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(humDisplayTitle, DEFAULT_TITLE_COLOR, LV_STATE_DEFAULT);
 
     //湿度显示
     hum_display = lv_label_create(hum_container);
-    lv_label_set_text_fmt(hum_display, "%s", hum);
+    lv_label_set_text_fmt(hum_display, "%s", temp);
+    lv_obj_set_style_text_font(hum_display, &hmos_sanc_sc_regular_number_23, LV_STATE_DEFAULT);
 
-    lv_obj_set_style_text_font(hum_display, &dgital_number_50, LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(hum_display, DEFAULT_TITLE_COLOR, LV_STATE_DEFAULT);
-  
+    //温度图标
+    lv_obj_t * icon = lv_img_create(hum_container);
+    lv_img_set_src(icon, &humidity_icon);
 
-    lv_obj_t * humDisplaySign = lv_label_create(hum_container);
-    lv_label_set_text(humDisplaySign, "%");
- 
-    lv_obj_set_style_text_font(humDisplaySign, &dgital_number_25, LV_STATE_DEFAULT);
-    lv_obj_set_style_text_color(humDisplaySign, DEFAULT_TITLE_COLOR, LV_STATE_DEFAULT);
+
+    lv_obj_t * tempDisplayTitle = lv_label_create(hum_container);
+    lv_label_set_text(tempDisplayTitle, "湿度");
+    lv_obj_set_style_text_font(tempDisplayTitle, &hmos_sanc_sc_regular_16, LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(tempDisplayTitle, DEFAULT_TITLE_COLOR, LV_STATE_DEFAULT);
 
 }
+
+/**
+ * @brief 
+ * 空气质量显示
+ */
+void airContainer(lv_obj_t * parent){
+     //空气质量显示容器
+    lv_obj_t * container = lv_obj_create(parent);
+    lv_obj_set_scrollbar_mode(container, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_layout(container, LV_LAYOUT_FLEX);
+    lv_obj_set_flex_flow(container, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_align(container, LV_FLEX_ALIGN_SPACE_BETWEEN, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_SPACE_BETWEEN);
+
+    
+    lv_obj_set_size(container,(255/3)-17 ,SCREEN_WIDTH-65);
+    lv_obj_set_style_border_width(container, 0, LV_STATE_DEFAULT);
+    lv_obj_set_style_radius(container, 0, LV_STATE_DEFAULT);
+
+
+    //温度显示
+    air_display = lv_label_create(container);
+    lv_label_set_text_fmt(air_display, "%s", temp);
+    lv_obj_set_style_text_font(air_display, &hmos_sanc_sc_regular_number_23, LV_STATE_DEFAULT);
+
+    //温度图标
+    lv_obj_t * icon = lv_img_create(container);
+    lv_img_set_src(icon, &air_icon);
+
+
+    lv_obj_t * tempDisplayTitle = lv_label_create(container);
+    lv_label_set_text(tempDisplayTitle, "空气");
+    lv_obj_set_style_text_font(tempDisplayTitle, &hmos_sanc_sc_regular_16, LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(tempDisplayTitle, DEFAULT_TITLE_COLOR, LV_STATE_DEFAULT);
+
+}
+
 
 
 /**
@@ -119,6 +156,8 @@ void humContainer(lv_obj_t * parent){
 void mainInfoComponent(lv_obj_t * parent){
     tempContainer(parent);
     humContainer(parent);
+    airContainer(parent);
+    // humContainer(parent);
 }
 
 

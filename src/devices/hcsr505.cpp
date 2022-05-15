@@ -14,6 +14,7 @@
 
 
 long previousTime = 0;
+bool state = false;
 
 
 
@@ -29,18 +30,22 @@ void init_hcsr505(void){
  * @brief 
  * 获取检测状态
  */
-void hcsr505_get_value(void (*Callback)(bool)){
+void hcsr505_loop(void){
     unsigned long currentTime = millis();
     if(currentTime - previousTime > 1000){
         previousTime = currentTime;
 
         if(digitalRead(HC_SR505_PIN) == HIGH) {
             Serial.println("检测到人体");
-            Callback(true);
+            state = true;
         } else {
             Serial.println("未检测到人体");
-            Callback(false);
+            state = false;
         }
     }
+}
+
+bool hcsr505_get_value(void){
+    return state;
 }
 

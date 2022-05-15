@@ -196,8 +196,8 @@ void loop() {
     if((WiFi.status() == WL_CONNECTED) && GUIInit && initStatus){
       socket_loop_function();
       update_time(); //更新时间
-      update_main_info_data(); //更新温度
-  
+      //update_main_info_data(); //更新温度
+      hcsr505_loop();
     }
 }
 

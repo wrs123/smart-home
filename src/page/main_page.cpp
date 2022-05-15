@@ -27,42 +27,60 @@ static long update_time_dealy=0;
 static long set_wifi_state_dealy = 0;
 lv_obj_t * status_bar;
 lv_obj_t * topContainer;
+lv_obj_t * led_switch;
 
 
 
 void led_switch_component(lv_obj_t * parent){
-    lv_obj_t * led_switch = lv_obj_create(parent);
+    led_switch = lv_obj_create(parent);
 
     lv_obj_set_scrollbar_mode(led_switch, LV_SCROLLBAR_MODE_OFF);
     lv_obj_set_layout(led_switch, LV_LAYOUT_FLEX);
     lv_obj_set_flex_flow(led_switch, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_flex_align(led_switch, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_flex_align(led_switch, LV_FLEX_ALIGN_SPACE_BETWEEN, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
 
     lv_obj_set_size(led_switch, SCREEN_HEIGHT-300, SCREEN_WIDTH-65);
     lv_obj_set_style_bg_color(led_switch,lv_color_make(25,190,107) ,LV_STATE_DEFAULT);
     lv_obj_set_style_radius(led_switch, 10, LV_STATE_DEFAULT);
     lv_obj_set_style_border_width(led_switch, 0, LV_STATE_DEFAULT);
     lv_obj_set_style_shadow_color(led_switch,DEFAULT_TITLE_COLOR ,LV_STATE_DEFAULT);
-    lv_obj_set_style_shadow_width(led_switch, 10, LV_STATE_DEFAULT);
-    lv_obj_set_style_shadow_opa(led_switch, 50, LV_STATE_DEFAULT);
-    lv_obj_align(led_switch, LV_ALIGN_TOP_RIGHT,-15,45);
+   lv_obj_set_style_shadow_width(led_switch, 8, LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_opa(led_switch, 30, LV_STATE_DEFAULT);
+    // lv_obj_set_style_opa(led_switch, 0, LV_STATE_DEFAULT);
+    lv_obj_align(led_switch, LV_ALIGN_TOP_LEFT,285,45);
     
     lv_obj_t * icon = lv_img_create(led_switch);
     lv_img_set_src(icon, &led_icon);
     // lv_img_set_zoom(icon, 60);
 
-    lv_obj_t * time_label = lv_label_create(led_switch);
-    lv_obj_set_style_text_font(time_label, &lv_font_montserrat_24, LV_STATE_DEFAULT);
+    lv_obj_t * percent_container = lv_obj_create(led_switch);
+    lv_obj_set_height(percent_container, 50);
+    lv_obj_set_style_radius(percent_container, 0, LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(percent_container, 0, LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(percent_container,0 ,LV_STATE_DEFAULT);
+    // lv_obj_set_layout(percent_container, LV_LAYOUT_FLEX);
+    // lv_obj_set_flex_flow(percent_container, LV_FLEX_FLOW_ROW);
+    // lv_obj_set_flex_align(percent_container, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_END, LV_FLEX_ALIGN_START);
+
+
+    lv_obj_t * time_label = lv_label_create(percent_container);
+    lv_obj_set_style_text_font(time_label, &hmos_sanc_sc_regular_number_23, LV_STATE_DEFAULT);
     lv_obj_set_style_text_color(time_label, lv_color_make(255,255,255), LV_STATE_DEFAULT);
-    lv_label_set_text_fmt(time_label, "%s", "80%");
-   
+    lv_label_set_text_fmt(time_label, "%s", "100");
+    lv_obj_align(time_label, LV_ALIGN_BOTTOM_MID, -5,0);
+
+    
+    lv_obj_t * time_label2 = lv_label_create(percent_container);
+    lv_obj_set_style_text_font(time_label2, &lv_font_montserrat_12, LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(time_label2, lv_color_make(255,255,255), LV_STATE_DEFAULT);
+    lv_label_set_text(time_label2,"%");
+    lv_obj_align(time_label2, LV_ALIGN_BOTTOM_MID, 21, -2);
+    
 
     lv_obj_t * name_label = lv_label_create(led_switch);
-    lv_obj_set_style_text_font(name_label, &lv_font_montserrat_20, LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(name_label, &hmos_sanc_sc_regular_16, LV_STATE_DEFAULT);
     lv_obj_set_style_text_color(name_label, lv_color_make(255,255,255), LV_STATE_DEFAULT);
-    lv_label_set_text(name_label, "LED");
-    
-    
+    lv_label_set_text(name_label, "台灯");   
 }
 
 
@@ -94,6 +112,8 @@ void init_main_page(void){
   lv_obj_set_style_text_font(time_label, &lv_font_montserrat_20, LV_STATE_DEFAULT);
   lv_obj_set_style_text_color(time_label, lv_color_make(0,0,0), LV_STATE_DEFAULT);
   lv_label_set_text_fmt(time_label, "%s", "null");
+  // lv_style_set_text_opa(&style_shadow, LV_OPA_30);
+    // lv_style_set_text_color(&style_shadow, lv_color_black());
   lv_obj_align(time_label, LV_ALIGN_LEFT_MID,0,0);
 
 
@@ -110,147 +130,28 @@ void init_main_page(void){
   lv_obj_align(wifi_icon, LV_ALIGN_RIGHT_MID,-5,0);
 
 
- 
+  led_switch_component(mainPage);
 
   //温湿度显示
   topContainer = lv_obj_create(mainPage);
 
-//   lv_obj_style_set_radius(&topBKStyle, LV_STATE_DEFAULT, 0);
-//   lv_obj_set_style_border_width(topContainer, 0, LV_STATE_DEFAULT);
-//   lv_style_set_bg_color(&topBKStyle, LV_STATE_DEFAULT, LV_COLOR_BLACK);
-//   lv_style_set_bg_opa(&topBKStyle, LV_STATE_DEFAULT, 50);  //lv_color_hex(0x2d8cf0)
-//   lv_style_set_shadow_width(&topBKStyle, LV_STATE_DEFAULT, 25);
-//   lv_style_set_shadow_color(&topBKStyle, LV_STATE_DEFAULT, lv_color_hex(0x666666));
-//   lv_obj_add_style(topContainer, LV_LABEL_PART_MAIN, &topBKStyle);
-  // lv_obj_set_y(topContainer, -200);
     lv_obj_set_size(topContainer, 255, SCREEN_WIDTH-65);
-    // lv_obj_set_pos(topContainer, -250, 40);
-     lv_obj_set_pos(topContainer, 15, -(SCREEN_WIDTH-55));
+    lv_obj_set_pos(topContainer, -260, 45);
     lv_obj_set_scrollbar_mode(topContainer, LV_SCROLLBAR_MODE_OFF);
     lv_obj_set_style_border_width(topContainer, 0, LV_STATE_DEFAULT);
     lv_obj_set_style_radius(topContainer, 10, LV_STATE_DEFAULT);
     // lv_obj_set_style_bg_opa(topContainer, LV_OPA_80, LV_STATE_DEFAULT);
     lv_obj_set_style_bg_color(topContainer, lv_color_make(255,255,255), LV_STATE_DEFAULT);
     lv_obj_set_style_shadow_color(topContainer,DEFAULT_TITLE_COLOR ,LV_STATE_DEFAULT);
-    lv_obj_set_style_shadow_width(topContainer, 20, LV_STATE_DEFAULT);
-    lv_obj_set_style_shadow_opa(topContainer, 70, LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(topContainer, 8, LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_opa(topContainer, 30, LV_STATE_DEFAULT);
+
+    lv_obj_set_layout(topContainer, LV_LAYOUT_FLEX);
+    lv_obj_set_flex_flow(topContainer, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(topContainer, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_SPACE_BETWEEN);
   
-  mainInfoComponent(topContainer);
 
-  led_switch_component(mainPage);
-
-  
-//   //按钮1图标
-//   lv_obj_t * button1Icon = lv_label_create(button1);
-//   static lv_style_t button1Icon_style;
-// 	lv_style_init(&button1Icon_style);
-//   lv_style_set_text_font(&button1Icon_style, LV_STATE_DEFAULT, &lv_font_montserrat_20);
-//   lv_style_set_text_color(&button1Icon_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
-//   lv_obj_add_style(button1Icon, LV_LABEL_PART_MAIN, &button1Icon_style);
-//   lv_label_set_text(button1Icon, LV_SYMBOL_CHARGE);
-//   lv_obj_align(button1Icon, button1, LV_ALIGN_CENTER, 0, 0);
-
-//   //按钮2
-//   lv_obj_t * button2 = lv_obj_create(mainPage);
-//   static lv_style_t button2Style;
-//   lv_style_init(&button2Style);
-//   lv_style_set_radius(&button2Style, LV_STATE_DEFAULT, 30);
-//   lv_style_set_bg_color(&button2Style, LV_STATE_DEFAULT, lv_color_hex(0x19be6b));
-//   lv_style_set_border_width(&button2Style, LV_STATE_DEFAULT, 0);
-//   lv_style_set_shadow_width(&button2Style, LV_STATE_DEFAULT, 15);
-//   lv_style_set_shadow_color(&button2Style, LV_STATE_DEFAULT, lv_color_hex(0x5b5f6a));
-//   lv_obj_add_style(button2, LV_LABEL_PART_MAIN, &button2Style);
-//   lv_obj_set_pos(button2, 90, 280+60);
-//   lv_obj_set_width(button2, 50);
-//   lv_obj_set_height(button2, 50);
-//   //按钮2图标
-//   lv_obj_t * button2Icon = lv_label_create(button2);
-//   static lv_style_t button2Icon_style;
-// 	lv_style_init(&button2Icon_style);
-//   lv_style_set_text_font(&button2Icon_style, LV_STATE_DEFAULT, &lv_font_montserrat_20);
-//   lv_style_set_text_color(&button2Icon_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
-//   lv_obj_add_style(button2Icon, LV_LABEL_PART_MAIN, &button2Icon_style);
-//   lv_label_set_text(button2Icon, LV_SYMBOL_BELL);
-//   lv_obj_align(button2Icon, button2, LV_ALIGN_CENTER, 0, 0);
-
-//   //按钮3
-//   lv_obj_t * button3 = lv_obj_create(mainPage);
-//   static lv_style_t button3Style;
-//   lv_style_init(&button3Style);
-//   lv_style_set_radius(&button3Style, LV_STATE_DEFAULT, 30);
-//   lv_style_set_border_width(&button3Style, LV_STATE_DEFAULT, 0);
-//   lv_style_set_bg_color(&button3Style, LV_STATE_DEFAULT, lv_color_hex(0x19be6b));
-//   lv_style_set_shadow_width(&button3Style, LV_STATE_DEFAULT, 15);
-//   lv_style_set_shadow_color(&button3Style, LV_STATE_DEFAULT, lv_color_hex(0x5b5f6a));
-//   lv_obj_add_style(button3, LV_LABEL_PART_MAIN, &button3Style);
-//   lv_obj_set_pos(button3, 160, 280+60);
-//   lv_obj_set_width(button3, 50);
-//   lv_obj_set_height(button3, 50);
-//   //按钮3图标
-//   lv_obj_t * button3Icon = lv_label_create(button3);
-//   static lv_style_t button3Icon_style;
-// 	lv_style_init(&button3Icon_style);
-//   lv_style_set_text_font(&button3Icon_style, LV_STATE_DEFAULT, &lv_font_montserrat_20);
-//   lv_style_set_text_color(&button3Icon_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
-//   lv_obj_add_style(button3Icon, LV_LABEL_PART_MAIN, &button3Icon_style);
-//   lv_label_set_text(button3Icon, LV_SYMBOL_EYE_OPEN);
-//   lv_obj_align(button3Icon, button3, LV_ALIGN_CENTER, 0, 0);
-
-
-//   lv_anim_t b;                 
-//   lv_anim_init(&b);
-//   lv_anim_set_exec_cb(&b, (lv_anim_exec_xcb_t) lv_obj_set_y);
-//   lv_anim_set_var(&b, topContainer);
-//   lv_anim_set_time(&b, 300);
-//   lv_anim_set_delay(&b, 650);
-//   lv_anim_path_t path2;
-//   lv_anim_path_init(&path2);
-//   lv_anim_path_set_cb(&path2, lv_anim_path_ease_out);
-//   lv_anim_set_path(&b, &path2);
-//   lv_anim_set_values(&b, -200, 0);
-//   lv_anim_start(&b); 
-
-
-//   lv_anim_t b1anim;
-//   lv_anim_init(&b1anim);
-//   lv_anim_set_exec_cb(&b1anim, (lv_anim_exec_xcb_t) lv_obj_set_y);
-//   lv_anim_set_var(&b1anim, button1);
-//   lv_anim_set_time(&b1anim, 350);
-//   lv_anim_set_delay(&b1anim, 1300);
-//   lv_anim_path_t b1path;
-//   lv_anim_path_init(&b1path);
-//   lv_anim_path_set_cb(&b1path, lv_anim_path_ease_out);
-//   lv_anim_set_path(&b1anim, &b1path);
-//   lv_anim_set_values(&b1anim, 280+60, 280-65);
-//   lv_anim_start(&b1anim); 
-
-//   lv_anim_t b2anim;
-//   lv_anim_init(&b2anim);
-//   lv_anim_set_exec_cb(&b2anim, (lv_anim_exec_xcb_t) lv_obj_set_y);
-//   lv_anim_set_var(&b2anim, button2);
-//   lv_anim_set_time(&b2anim, 350);
-//   lv_anim_set_delay(&b2anim, 1600);
-//   lv_anim_path_t b2path;
-//   lv_anim_path_init(&b2path);
-//   lv_anim_path_set_cb(&b2path, lv_anim_path_ease_out);
-//   lv_anim_set_path(&b2anim, &b2path);
-//   lv_anim_set_values(&b2anim, 280+60, 280-65);
-//   lv_anim_start(&b2anim); 
-
-
-//   lv_anim_t b3anim;
-//   lv_anim_init(&b3anim);
-//   lv_anim_set_exec_cb(&b3anim, (lv_anim_exec_xcb_t) lv_obj_set_y);
-//   lv_anim_set_var(&b3anim, button3);
-//   lv_anim_set_time(&b3anim, 350);
-//   lv_anim_set_delay(&b3anim, 1900);
-//   lv_anim_path_t b3path;
-//   lv_anim_path_init(&b3path);
-//   lv_anim_path_set_cb(&b3path, lv_anim_path_ease_out);
-//   lv_anim_set_path(&b3anim, &b3path);
-//   lv_anim_set_values(&b3anim, 280+60, 280-65);
-//   lv_anim_start(&b3anim); 
-
+    mainInfoComponent(topContainer);
 }
 
 
@@ -261,7 +162,7 @@ void init_main_page(void){
  * 更新时间
  */
 void update_time(void){
-  unsigned long currentTime=millis();
+  unsigned long currentTime = millis();
    if(currentTime - update_time_dealy > 2000){
     update_time_dealy = currentTime;
     String time = getNowTime();
@@ -293,7 +194,7 @@ void status_bar_anim(uint32_t delay){
     lv_anim_init(&status_bar_animin_in);
     lv_anim_set_exec_cb(&status_bar_animin_in, (lv_anim_exec_xcb_t) lv_obj_set_y);
     lv_anim_set_var(&status_bar_animin_in, status_bar);
-    lv_anim_set_time(&status_bar_animin_in, 300);
+    lv_anim_set_time(&status_bar_animin_in, 350);
     lv_anim_set_delay(&status_bar_animin_in, delay);
     lv_anim_set_path_cb(&status_bar_animin_in, lv_anim_path_ease_out);
     lv_anim_set_values(&status_bar_animin_in, -40, 0);
@@ -312,21 +213,34 @@ void set_anim_opa(lv_obj_t * var, lv_opa_t value){
 void main_info_anim(uint32_t delay){
     lv_anim_t anim1;
     lv_anim_init(&anim1);
-    lv_anim_set_exec_cb(&anim1, (lv_anim_exec_xcb_t) lv_obj_set_y);
+    lv_anim_set_exec_cb(&anim1, (lv_anim_exec_xcb_t) lv_obj_set_x);
     lv_anim_set_var(&anim1, topContainer);
-    lv_anim_set_time(&anim1, 300);
-    lv_anim_set_delay(&anim1, delay+300);
+    lv_anim_set_time(&anim1, 305);
+    lv_anim_set_delay(&anim1, delay+350);
     lv_anim_set_path_cb(&anim1, lv_anim_path_ease_out);
     // lv_anim_set_values(&anim1, -250, 15); 
-    lv_anim_set_values(&anim1, -(SCREEN_WIDTH-55), 45);
-    lv_anim_start(&anim1);
-    
+    lv_anim_set_values(&anim1, -260, 15);
+    lv_anim_start(&anim1);  
+}
+
+void led_switch_anim(uint32_t delay){
+    lv_anim_t anim;
+    lv_anim_init(&anim);
+    lv_anim_set_exec_cb(&anim, (lv_anim_exec_xcb_t) lv_obj_set_x);
+    lv_anim_set_var(&anim, led_switch);
+    lv_anim_set_time(&anim, 300);
+    lv_anim_set_delay(&anim, delay+400);
+    lv_anim_set_path_cb(&anim, lv_anim_path_ease_out);
+    // lv_anim_set_values(&anim, -250, 15); 
+    lv_anim_set_values(&anim, -285, 285);
+    lv_anim_start(&anim);  
 }
 
 
 void set_widget_anim(uint32_t delay){
     status_bar_anim(delay);
-    main_info_anim(delay);
+    led_switch_anim(delay);
+    main_info_anim(delay);  
 }
 
 

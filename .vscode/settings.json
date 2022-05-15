@@ -61,6 +61,8 @@
         "device.c": "cpp",
         "lv_qrcode.h": "c",
         "device_icon.c": "cpp",
-        "led_icon.c": "cpp"
+        "led_icon.c": "cpp",
+        "temperature_icon.c": "cpp",
+        "humidity_icon.c": "cpp"
     }
 }

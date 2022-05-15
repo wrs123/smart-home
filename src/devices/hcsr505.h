@@ -13,6 +13,8 @@
 
 void init_hcsr505(void);
 
-void hcsr505_get_value(void (*Callback)(bool));
+bool hcsr505_get_value(void);
+
+void hcsr505_loop(void);
 
 #endif

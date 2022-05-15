@@ -252,7 +252,7 @@
 //#define TFT_RST  32  // Reset pin, toggles on startup
 
 #define TFT_WR    5//13  // Write strobe control pin - must use a pin in the range 0-31
-#define TFT_RD    2//22  // Read strobe control pin
+#define TFT_RD    15//22  // Read strobe control pin
 #define TFT_BL   12//23
 
 #define TFT_D0   21//19  // Must use pins in the range 0-31 for the data bus
@@ -264,6 +264,7 @@
 #define TFT_D6   27//25
 #define TFT_D7   25//15
 // #define TFT_RGB_ORDER 1
+// #define TOUCH_CS   -1//15
 
 
 //spi pin
