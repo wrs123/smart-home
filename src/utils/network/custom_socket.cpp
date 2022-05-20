@@ -1,5 +1,6 @@
 #include "custom_socket.h"
 #include <ArduinoWebsockets.h>
+#include "../../devices/led.h"
 
 
 enum class SocketConnectStatus{
@@ -13,6 +14,7 @@ using namespace websockets;
 WebsocketsClient client;
 static long wait_dealy=0;
 String key = "";
+int id = 1;
 
 
 bool keyInitCallback(String data, bool status){
@@ -69,7 +71,7 @@ void socketClientInit(void){
  * socket连接状态判断
  */
 void socket_status_check(void){
-  Serial.println("获取socket连接状态");
+  // Serial.println("获取socket连接状态");
   client.onEvent([](WebsocketsClient& client, WebsocketsEvent event, String payload){
       switch (event){
         case WebsocketsEvent::ConnectionClosed:  //连接被关闭
@@ -89,6 +91,20 @@ void socket_status_check(void){
 }
 
 
+void command_choose(int command, uint32_t value){
+  switch (command)
+      {
+      case 0: //led
+        Serial.println(command);
+        set_led_value(value);
+        setLedValue(String(value));
+        break;
+      default:
+        break;
+      }
+}
+
+
 
 /**
  * @brief 
@@ -100,28 +116,26 @@ void getMessage(void){
       DynamicJsonDocument doc(1024);
       String data = message.data();
       deserializeJson(doc, data);
-      String type = doc["type"];
-      String message_type = doc["data"]["type"];
+      int type = doc["type"];
+      int message_id = doc["id"];
+      Serial.println(message_id);
 
-      // switch (type)
-      // {
-      // case "normal":
-      //   /* code */
-      //   break;
-      // case "ctr":
-      //   /* code */
-      //   break;
-      // default:
-      //   break;
-      // }
-      bool led_power = doc["data"]["power"];
+      switch (type)
+      {
+      case 0:  //data
+       
+        break;
+      case 1: {//commend
+        String value = doc["data"]["value"];
+        command_choose(doc["data"]["command"], doc["data"]["value"]);
+        
+        client.send("{'id':"+String(message_id)+",'from': '/pico', 'to': '/app', 'type':3, 'data': {'command':0,'value':"+value+",'code':0}}");
+        break;
+        }
+      default:
+        break;
+      }
       
-      // if(!ledStatus){
-      //   led_open();
-      // }else{
-      //   led_close();
-      // }
-      // ledStatus = led_power;
       Serial.print("Got Message: ");
       Serial.print(data);
   });
@@ -142,7 +156,7 @@ bool get_socket_connect_status(void){
  * 
  */
 void send_socket_data(void){
-  String param = "{'from': '/pico', 'to': '/app', 'type':'normal', data: {}";
+  String param = "{'id':"+String(id)+",'from': '/pico', 'to': '/app', 'type':0, 'data': {}";
   String ouput_param;
   DynamicJsonDocument dataDoc(1024);
   deserializeJson(dataDoc, param);
@@ -153,6 +167,7 @@ void send_socket_data(void){
   
   serializeJson(dataDoc, ouput_param); 
 
+  id+=1;
   client.send(ouput_param);
 }
 
@@ -171,5 +186,6 @@ void socket_loop_function(void){
         return ;
       }
       send_socket_data();
+      getMessage();
     }
 }

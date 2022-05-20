@@ -19,19 +19,19 @@
 
 
 #include "./assets/fonts/zcool_kuhei_24.h"
-#include "./assets/fonts/HarmonyOS_Sans_SC_Regular_24.h"
+#include "./assets/fonts/hmos_sc_22.h"
 // #include "./assets/fonts/dgital_number_32.h"
 
-#include "./assets/fonts/hmos_sanc_sc_regular_number_23.h"
-#include "./assets/fonts/hmos_sanc_sc_regular_16.h"
+#include "./assets/fonts/hmos_sc_28.h"
+#include "./assets/fonts/hmos_sc_16.h"
 #include "./assets/fonts/icons_23.h"
 
 LV_FONT_DECLARE(zcool_kuhei_24);
-LV_FONT_DECLARE(HarmonyOS_Sans_SC_Regular_24);
+LV_FONT_DECLARE(hmos_sc_22);
 // LV_FONT_DECLARE(dgital_number_32);
-LV_FONT_DECLARE(hmos_sanc_sc_regular_number_23);
+LV_FONT_DECLARE(hmos_sc_28);
 // LV_FONT_DECLARE(dgital_number_25);
-LV_FONT_DECLARE(hmos_sanc_sc_regular_16);
+LV_FONT_DECLARE(hmos_sc_16);
 LV_FONT_DECLARE(icons_23);
 
 /* =============icons define===========*/
@@ -141,6 +141,9 @@ static String AP_PASSWORDD = AP_PASSWORD;
     #define RESET_PIN 32 //触控引脚
 #endif //RESET_PIN
 
+#ifndef LED_PIN
+    #define LED_PIN 2 //led引脚
+#endif //LED_PIN
 
 #endif //CONFIG_H
 

@@ -36,10 +36,10 @@ void hcsr505_loop(void){
         previousTime = currentTime;
 
         if(digitalRead(HC_SR505_PIN) == HIGH) {
-            Serial.println("检测到人体");
+            // Serial.println("检测到人体");
             state = true;
         } else {
-            Serial.println("未检测到人体");
+            // Serial.println("未检测到人体");
             state = false;
         }
     }

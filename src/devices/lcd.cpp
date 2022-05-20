@@ -28,6 +28,10 @@ void init_lcd(void){
     tft.setRotation(3); /* Landscape orientation */
     // tft.initDMA(true);
 
+    // ledcSetup(5, 1000, 8); // 设置通道
+    // ledcAttachPin(TFT_BL, 5);
+    // ledcWrite(5, 255);
+
     lv_disp_draw_buf_init(&disp_buf, buf, NULL, SCREEN_WIDTH * 100);
 
     /*Initialize the display*/

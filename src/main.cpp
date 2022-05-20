@@ -32,6 +32,7 @@
 #include "utils/tools.h"
 #include "utils/network/custom_socket.h"
 #include "devices/lcd.h"
+#include "devices/led.h"
 
 /* page include */
 #include "page/init_page.h"
@@ -112,6 +113,8 @@ void taskOne(void *parameter)
   init_buzzer();
   //初始化温湿度传感器
   DHT11_init();
+   //初始化led
+  init_led();
   //初始化socket
   socketClientInit();
   initStatus = true;
@@ -145,6 +148,8 @@ void setup() {
   //  NVSRemove();
   //初始化led
   // initLED();
+  // set_led_value(50);
+  
   
   // digitalWrite(33, LOW);
 }
@@ -152,53 +157,37 @@ void setup() {
 
 //主循环
 void loop() {
-  // if(WiFi.status() == WL_CONNECTED && GUIInit && initStatus){
-    // tftEndWrite();
+
   lv_timer_handler(); /* let the GUI do its work */
-  //   // lv_label_set_text_fmt(tempDisplay, "%s°C", temp);
-  // }
-     
-    // //更新时间
-     //update_time();
 
-    // if(connect_status){
-    //   //发送数据
-    //   sendTHData();
-    //   //数据接收
-    //   getMessage();
-    // }else{;.;l/;'?
 
-    //   //重连
-    //   socketClientInit();
-    //   delay(1500);
-    // }
+  //重置监听
+  reset_pico();
 
-    //重置监听
-    reset_pico();
+  if(WiFi.status() != WL_CONNECTED && get_nvswifi_state() == NVSGetWifiInfoState::NONE && !GUIInit){
+    set_nvswifi_state_standby();
+    start_net_config_server();
 
-    if(WiFi.status() != WL_CONNECTED && get_nvswifi_state() == NVSGetWifiInfoState::NONE && !GUIInit){
-      set_nvswifi_state_standby();
-      start_net_config_server();
-  
-      load_qr_code_page(); //切换到配网页面
-      // start_set_network(); //
-    }
+    load_qr_code_page(); //切换到配网页面
+    // start_set_network(); //
+  }
 
-    if((WiFi.status() == WL_CONNECTED) && !GUIInit && initStatus){
-      load_main_page();
-      GUIInit = true;
-    }
+  if((WiFi.status() == WL_CONNECTED) && !GUIInit && initStatus){
+    load_main_page();
+    GUIInit = true;
+  }
 
-    if(GUIInit && initStatus){
-      set_icon_status(); //更新状态图标
-    }
+  if(GUIInit && initStatus){
+    set_icon_status(); //更新状态图标
+  }
 
-    if((WiFi.status() == WL_CONNECTED) && GUIInit && initStatus){
-      socket_loop_function();
-      update_time(); //更新时间
-      //update_main_info_data(); //更新温度
-      hcsr505_loop();
-    }
+  if((WiFi.status() == WL_CONNECTED) && GUIInit && initStatus){
+    // set_led_value(50);
+    socket_loop_function();
+    update_time(); //更新时间
+    update_main_info_data(); //更新温度
+    hcsr505_loop();
+  }
 }
 
 // #include "Freenove_WS2812_Lib_for_ESP32.h"

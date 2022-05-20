@@ -27,4 +27,6 @@ void set_icon_status(void);
 
 void load_main_page();
 
+void setLedValue(String value);
+
 #endif

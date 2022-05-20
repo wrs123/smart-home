@@ -60,12 +60,12 @@ void init_page(void){
 
 
   initText = lv_label_create(screen);
-  lv_label_set_text(initText, "系统初始化中");
+  lv_label_set_text(initText, "系统加载中");
   lv_obj_align(initText, LV_ALIGN_CENTER, 0, 60);
   // lv_label_set_align(initText, LV_LABEL_ALIGN_CENTER);
   static lv_style_t tempDisplay_style;
 	lv_style_init(&tempDisplay_style);
-  lv_obj_set_style_text_font(initText, &zcool_kuhei_24, LV_STATE_DEFAULT);
+  lv_obj_set_style_text_font(initText, &hmos_sc_22, LV_STATE_DEFAULT);
   lv_obj_set_style_text_color(initText, DEFAULT_TITLE_COLOR, LV_STATE_DEFAULT);
  
 

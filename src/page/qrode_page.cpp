@@ -34,10 +34,10 @@ void init_QRcode_page(void){
    
   //提示信息显示
   lv_obj_t * labels = lv_label_create(QRCodePage);
-  lv_label_set_text(labels, "请使用APP扫描");
+  lv_label_set_text(labels, "请使用App扫描");
    static lv_style_t labels_style;
 	lv_style_init(&labels_style);
-  lv_obj_set_style_text_font(labels, &HarmonyOS_Sans_SC_Regular_24, LV_STATE_DEFAULT);
+  lv_obj_set_style_text_font(labels, &hmos_sc_22, LV_STATE_DEFAULT);
   lv_obj_set_style_text_color(labels, lv_color_make(255,255,255), LV_STATE_DEFAULT);
 
   lv_label_set_long_mode(labels, LV_LABEL_LONG_WRAP);
