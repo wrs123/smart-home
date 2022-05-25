@@ -25,6 +25,17 @@ String air = "良";
 static long update_info_dealy=0;
 
 
+void lv_container_init(lv_obj_t * container){
+    lv_obj_remove_style_all(container);
+
+    lv_obj_set_size(container,255/3, lv_pct(100));
+    lv_obj_set_scrollbar_mode(container, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_layout(container, LV_LAYOUT_FLEX);
+    lv_obj_set_flex_flow(container, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_align(container, LV_FLEX_ALIGN_SPACE_AROUND, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+}
+
+
 /**
  * @brief 
  * 温度显示容器
@@ -33,23 +44,13 @@ static long update_info_dealy=0;
 void tempContainer(lv_obj_t * parent){
     //温度显示容器
     temp_container = lv_obj_create(parent);
-    lv_obj_set_scrollbar_mode(temp_container, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_layout(temp_container, LV_LAYOUT_FLEX);
-    lv_obj_set_flex_flow(temp_container, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_flex_align(temp_container, LV_FLEX_ALIGN_SPACE_BETWEEN, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_SPACE_BETWEEN);
-
-
-    
-    lv_obj_set_size(temp_container,(255/3)-17 ,SCREEN_WIDTH-65);
-    lv_obj_set_style_border_width(temp_container, 0, LV_STATE_DEFAULT);
-    lv_obj_set_style_radius(temp_container, 0, LV_STATE_DEFAULT);
-
+    lv_obj_remove_style_all(temp_container);
+    lv_container_init(temp_container);
 
     lv_obj_t * vlaue_container = lv_obj_create(temp_container);
-    lv_obj_set_flex_grow(vlaue_container, 1);
-    lv_obj_set_style_border_width(vlaue_container,0,LV_STATE_DEFAULT);
+    lv_obj_remove_style_all(vlaue_container);
+    lv_obj_set_size(vlaue_container, lv_pct(100), 50);
     lv_obj_set_x(vlaue_container, -10);
-
 
 
     lv_obj_t * sign_display = lv_label_create(vlaue_container);
@@ -62,15 +63,11 @@ void tempContainer(lv_obj_t * parent){
     lv_label_set_text_fmt(temp_display, "%s", temp);
     lv_obj_set_style_text_font(temp_display, &hmos_sc_28, LV_STATE_DEFAULT);
     lv_obj_align(temp_display, LV_ALIGN_BOTTOM_MID, -6,0);
-
-
-    
+   
     //温度图标
     lv_obj_t * icon = lv_img_create(temp_container);
     lv_img_set_src(icon, &temperature_icon);
-
-    
-
+   
     lv_obj_t * tempDisplayTitle = lv_label_create(temp_container);
     lv_label_set_text(tempDisplayTitle, "温度");
     lv_obj_set_style_text_font(tempDisplayTitle, &hmos_sc_16, LV_STATE_DEFAULT);
@@ -87,20 +84,12 @@ void tempContainer(lv_obj_t * parent){
 void humContainer(lv_obj_t * parent){
      //湿度显示容器
     lv_obj_t * hum_container = lv_obj_create(parent);
-    lv_obj_set_scrollbar_mode(hum_container, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_layout(hum_container, LV_LAYOUT_FLEX);
-    lv_obj_set_flex_flow(hum_container, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_flex_align(hum_container, LV_FLEX_ALIGN_SPACE_BETWEEN, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_SPACE_BETWEEN);
-
-    
-    lv_obj_set_size(hum_container,(255/3)-17 ,SCREEN_WIDTH-65);
-    lv_obj_set_style_border_width(hum_container, 0, LV_STATE_DEFAULT);
-    lv_obj_set_style_radius(hum_container, 0, LV_STATE_DEFAULT);
-
+    lv_obj_remove_style_all(hum_container);
+    lv_container_init(hum_container);
 
     lv_obj_t * vlaue_container = lv_obj_create(hum_container);
-    lv_obj_set_flex_grow(vlaue_container, 1);
-    lv_obj_set_style_border_width(vlaue_container,0,LV_STATE_DEFAULT);
+    lv_obj_remove_style_all(vlaue_container);
+    lv_obj_set_size(vlaue_container, lv_pct(100), 50);
     lv_obj_set_x(vlaue_container, -10);
 
 
@@ -137,27 +126,19 @@ void humContainer(lv_obj_t * parent){
 void airContainer(lv_obj_t * parent){
      //空气质量显示容器
     lv_obj_t * container = lv_obj_create(parent);
-    lv_obj_set_scrollbar_mode(container, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_layout(container, LV_LAYOUT_FLEX);
-    lv_obj_set_flex_flow(container, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_flex_align(container, LV_FLEX_ALIGN_SPACE_BETWEEN, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_SPACE_BETWEEN);
-
-    
-    lv_obj_set_size(container,(255/3)-17 ,SCREEN_WIDTH-65);
-    lv_obj_set_style_border_width(container, 0, LV_STATE_DEFAULT);
-    lv_obj_set_style_radius(container, 0, LV_STATE_DEFAULT);
-
+    lv_obj_remove_style_all(container);
+    lv_container_init(container);
 
     lv_obj_t * vlaue_container = lv_obj_create(container);
-    lv_obj_set_flex_grow(vlaue_container, 1);
-    lv_obj_set_style_border_width(vlaue_container,0,LV_STATE_DEFAULT);
+    lv_obj_remove_style_all(vlaue_container);
+    lv_obj_set_size(vlaue_container, lv_pct(100), 50);
     lv_obj_set_x(vlaue_container, -10);
 
 
     //空气质量显示
     air_display = lv_label_create(vlaue_container);
     lv_label_set_text_fmt(air_display, "%s", air);
-    lv_obj_align(air_display, LV_ALIGN_CENTER, 0,0);
+    lv_obj_align(air_display, LV_ALIGN_BOTTOM_MID, 0,-2);
     lv_obj_set_style_text_font(air_display, &hmos_sc_28, LV_STATE_DEFAULT);
 
     //空气质量图标

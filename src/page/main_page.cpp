@@ -33,12 +33,13 @@ lv_obj_t * led_switch_bg;
 lv_obj_t * led_label;
 String led_value = "关";
 lv_anim_t switch_anim;
-int16_t led_value_height = 0;
+int16_t led_value_opa = 0;
 
 
 
 void led_switch_component(lv_obj_t * parent){
     led_switch_bg = lv_obj_create(parent);
+    // lv_obj_remove_style_all(led_switch_bg);
     lv_obj_set_scrollbar_mode(led_switch_bg, LV_SCROLLBAR_MODE_OFF);
     lv_obj_set_size(led_switch_bg, SCREEN_HEIGHT-300, SCREEN_WIDTH-65);
     lv_obj_set_style_bg_color(led_switch_bg,lv_color_make(134,134,134) ,LV_STATE_DEFAULT);
@@ -49,14 +50,14 @@ void led_switch_component(lv_obj_t * parent){
     lv_obj_align(led_switch_bg, LV_ALIGN_TOP_LEFT,285,45);
 
 
-    led_switch_value_bg = lv_obj_create(led_switch_bg);
-    lv_obj_set_scrollbar_mode(led_switch_value_bg, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_size(led_switch_value_bg, SCREEN_HEIGHT-300, led_value_height);
-    lv_obj_set_style_bg_color(led_switch_value_bg,lv_color_make(235,168,17) ,LV_STATE_DEFAULT);
-    lv_obj_set_style_radius(led_switch_value_bg, 10, LV_STATE_DEFAULT);
-    lv_obj_set_style_border_width(led_switch_value_bg, 0, LV_STATE_DEFAULT);
-    lv_obj_set_style_shadow_width(led_switch_value_bg, 0, LV_STATE_DEFAULT); 
-    lv_obj_align(led_switch_value_bg, LV_ALIGN_BOTTOM_MID,0,16);
+    // led_switch_value_bg = lv_obj_create(led_switch_bg);
+    // lv_obj_set_scrollbar_mode(led_switch_value_bg, LV_SCROLLBAR_MODE_OFF);
+    // lv_obj_set_size(led_switch_value_bg, SCREEN_HEIGHT-300, led_value_height);
+    // lv_obj_set_style_bg_color(led_switch_value_bg,lv_color_make(235,168,17) ,LV_STATE_DEFAULT);
+    // lv_obj_set_style_radius(led_switch_value_bg, 10, LV_STATE_DEFAULT);
+    // lv_obj_set_style_border_width(led_switch_value_bg, 0, LV_STATE_DEFAULT);
+    // lv_obj_set_style_shadow_width(led_switch_value_bg, 0, LV_STATE_DEFAULT); 
+    // lv_obj_align(led_switch_value_bg, LV_ALIGN_BOTTOM_MID,0,16);
 
 
     led_switch = lv_obj_create(led_switch_bg);
@@ -65,9 +66,10 @@ void led_switch_component(lv_obj_t * parent){
     lv_obj_set_flex_flow(led_switch, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_flex_align(led_switch, LV_FLEX_ALIGN_SPACE_BETWEEN, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
     lv_obj_set_size(led_switch, SCREEN_HEIGHT-300, SCREEN_WIDTH-65);
-    lv_obj_set_style_bg_opa(led_switch,0 ,LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(led_switch,led_value_opa,LV_STATE_DEFAULT);
     lv_obj_set_style_radius(led_switch, 10, LV_STATE_DEFAULT);
     lv_obj_set_style_border_width(led_switch, 0, LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(led_switch, lv_color_make(235,168,17),LV_STATE_DEFAULT);
      lv_obj_set_style_shadow_width(led_switch, 0, LV_STATE_DEFAULT); 
     lv_obj_set_align(led_switch, LV_ALIGN_CENTER);
 
@@ -162,13 +164,13 @@ void init_main_page(void){
 
   //温湿度显示
   topContainer = lv_obj_create(mainPage);
+  lv_obj_remove_style_all(topContainer);
 
     lv_obj_set_size(topContainer, 255, SCREEN_WIDTH-65);
     lv_obj_set_pos(topContainer, -260, 45);
     lv_obj_set_scrollbar_mode(topContainer, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_style_border_width(topContainer, 0, LV_STATE_DEFAULT);
     lv_obj_set_style_radius(topContainer, 10, LV_STATE_DEFAULT);
-    // lv_obj_set_style_bg_opa(topContainer, LV_OPA_80, LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(topContainer, LV_OPA_COVER, LV_STATE_DEFAULT);
     lv_obj_set_style_bg_color(topContainer, lv_color_make(255,255,255), LV_STATE_DEFAULT);
     lv_obj_set_style_shadow_color(topContainer,DEFAULT_TITLE_COLOR ,LV_STATE_DEFAULT);
     lv_obj_set_style_shadow_width(topContainer, 8, LV_STATE_DEFAULT);
@@ -176,7 +178,7 @@ void init_main_page(void){
 
     lv_obj_set_layout(topContainer, LV_LAYOUT_FLEX);
     lv_obj_set_flex_flow(topContainer, LV_FLEX_FLOW_ROW);
-    lv_obj_set_flex_align(topContainer, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_SPACE_BETWEEN);
+    lv_obj_set_flex_align(topContainer, LV_FLEX_ALIGN_SPACE_AROUND, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_SPACE_AROUND);
   
 
     mainInfoComponent(topContainer);
@@ -280,6 +282,10 @@ void load_main_page(){
     set_widget_anim(1000);
 }
 
+void set_bg_opa_anim(lv_obj_t * obj, lv_opa_t value){
+  lv_obj_set_style_bg_opa(obj, value, LV_STATE_DEFAULT);
+}
+
 /**
  * @brief 设置台灯亮度值
  * 
@@ -291,13 +297,15 @@ void setLedValue(String value){
   
   lv_anim_t anim;
   lv_anim_init(&anim);
-  lv_anim_set_exec_cb(&anim, (lv_anim_exec_xcb_t) lv_obj_set_height);
-  lv_anim_set_var(&anim, led_switch_value_bg);
+  lv_anim_set_exec_cb(&anim, (lv_anim_exec_xcb_t) set_bg_opa_anim);
+  lv_anim_set_var(&anim, led_switch);
   lv_anim_set_time(&anim, 250);
   // lv_anim_set_path_cb(&anim, lv_anim_path_ease_in_out);
-  lv_anim_set_values(&anim, led_value_height, (SCREEN_WIDTH-65)*value.toInt()/100);
+  // lv_anim_set_values(led_switch,(SCREEN_WIDTH-65)*value.toInt()/100,LV_STATE_DEFAULT);
+  Serial.println(value.toInt());
+  lv_anim_set_values(&anim, led_value_opa, value.toInt()*2.55);
   lv_anim_start(&anim);  
 
-  led_value_height = (SCREEN_WIDTH-65)*value.toInt()/100;
+  led_value_opa = value.toInt()*2.55;
   lv_label_set_text_fmt(led_label, "%s", led_value);
 }
